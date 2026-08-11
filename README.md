@@ -20,7 +20,7 @@ The project is being built using **HTML, CSS, JavaScript, Node.js, Express.js, a
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/shvjubayer-source/CodeBD.git
 ```
 
 ### 2. Enter the Project Directory
