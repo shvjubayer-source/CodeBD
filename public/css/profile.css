@@ -1,389 +1,866 @@
-
-
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+/* =========================
+BODY
+========================= */
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+"Segoe UI",
+Roboto,
+Helvetica,
+Arial,
+sans-serif;
 
-    background: linear-gradient(
+background:
+    linear-gradient(
         135deg,
         #e0e7ff 0%,
         #c7d2fe 100%
     );
 
-    color: #1e293b;
+color: #1e293b;
 
-    min-height: 100vh;
-    min-height: 100dvh;
+min-height: 100vh;
+min-height: 100dvh;
 
-    display: flex;
-    flex-direction: column;
+display: flex;
+flex-direction: column;
+
+
 }
 
-
 /* =========================
-   HEADER
+HEADER
 ========================= */
 
 header {
-    background: linear-gradient(
-        to right,
+background:
+linear-gradient(
+to right,
+#4f46e5,
+#3730a3
+);
+
+
+padding: 16px 32px;
+
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+gap: 24px;
+
+box-shadow:
+    0 4px 12px rgba(55, 48, 163, 0.3);
+
+
+}
+
+header h1 {
+font-size: 1.5rem;
+font-weight: 800;
+
+
+color: #ffffff;
+
+letter-spacing: 0.5px;
+
+flex-shrink: 0;
+
+
+}
+
+/* =========================
+NAVBAR
+========================= */
+
+nav {
+display: flex;
+align-items: center;
+justify-content: flex-end;
+
+
+gap: 20px;
+
+flex-wrap: wrap;
+
+
+}
+
+nav a {
+color: #c7d2fe;
+
+
+text-decoration: none;
+
+font-weight: 600;
+font-size: 0.95rem;
+
+white-space: nowrap;
+
+transition: all 0.2s ease;
+
+
+}
+
+nav a:hover {
+color: #ffffff;
+
+
+text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.4);
+
+
+}
+
+/* =========================
+PROFILE NAV LINK
+========================= */
+
+#profile_link {
+text-decoration: underline;
+}
+
+/* =========================
+LOGOUT BUTTON
+========================= */
+
+#logoutBtn {
+padding: 8px 16px;
+
+
+font-size: 0.9rem;
+font-weight: 600;
+
+color: #ffffff;
+
+background-color:
+    rgba(255, 255, 255, 0.1);
+
+border: 1.5px solid #c7d2fe;
+
+border-radius: 6px;
+
+cursor: pointer;
+
+white-space: nowrap;
+
+transition: all 0.2s ease;
+
+
+}
+
+#logoutBtn:hover {
+background-color: #ffffff;
+
+
+color: #4f46e5;
+
+border-color: #ffffff;
+
+box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.3);
+
+
+}
+
+#logoutBtn:active {
+transform: scale(0.96);
+}
+
+/* =========================
+MAIN
+========================= */
+
+main {
+flex: 1;
+
+
+display: flex;
+justify-content: center;
+align-items: flex-start;
+
+width: 100%;
+
+padding: 50px 24px 70px;
+
+
+}
+
+/* =========================
+PROFILE CARD
+========================= */
+
+.profile-card {
+width: 100%;
+
+
+max-width: 900px;
+
+background-color: #ffffff;
+
+border-radius: 18px;
+
+overflow: hidden;
+
+border:
+    1px solid
+    rgba(99, 102, 241, 0.15);
+
+box-shadow:
+    0 22px 50px
+    rgba(55, 48, 163, 0.18);
+
+
+}
+
+/* =========================
+PROFILE HEADER
+========================= */
+
+.profile-heading {
+display: flex;
+align-items: center;
+
+
+gap: 18px;
+
+padding: 28px 32px;
+
+background:
+    linear-gradient(
+        135deg,
+        #eef2ff,
+        #ffffff
+    );
+
+border-bottom:
+    1px solid #e0e7ff;
+
+
+}
+
+.profile-icon {
+width: 64px;
+height: 64px;
+
+
+flex-shrink: 0;
+
+display: flex;
+justify-content: center;
+align-items: center;
+
+border-radius: 50%;
+
+background:
+    linear-gradient(
+        135deg,
         #4f46e5,
         #3730a3
     );
 
-    padding: 16px 32px;
+color: #ffffff;
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+font-size: 1.8rem;
 
-    gap: 24px;
+box-shadow:
+    0 8px 18px
+    rgba(79, 70, 229, 0.25);
 
-    box-shadow: 0 4px 12px rgba(55, 48, 163, 0.3);
+
 }
 
+.profile-heading h2 {
+color: #312e81;
 
-header h1 {
-    font-size: 1.5rem;
-    font-weight: 800;
 
-    color: #ffffff;
+font-size: 1.8rem;
 
-    letter-spacing: 0.5px;
+font-weight: 800;
 
-    /* Prevent CodeBD from shrinking */
-    flex-shrink: 0;
+margin-bottom: 5px;
+
+
 }
 
+.profile-heading p {
+color: #64748b;
+
+
+font-size: 0.95rem;
+
+
+}
 
 /* =========================
-   NAVBAR
+PROFILE INFORMATION
 ========================= */
 
-nav {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    gap: 20px;
-
-    flex-wrap: wrap;
+.profile-info {
+padding: 18px 32px 24px;
 }
 
+.info-row {
+min-height: 88px;
 
-nav a {
-    color: #c7d2fe;
 
-    text-decoration: none;
+display: flex;
 
-    font-weight: 600;
-    font-size: 0.95rem;
+justify-content: space-between;
+align-items: center;
 
-    white-space: nowrap;
+gap: 24px;
 
-    transition: all 0.2s ease;
+padding: 18px 12px;
+
+border-bottom:
+    1px solid #e0e7ff;
+
+transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+
 }
 
-
-nav a:hover {
-    color: #ffffff;
-
-    text-shadow:
-        0 0 8px rgba(255, 255, 255, 0.4);
+.info-row:last-child {
+border-bottom: none;
 }
 
+.info-row:hover {
+background-color: #f8faff;
+
+
+border-radius: 10px;
+
+
+}
+
+.info-label {
+display: flex;
+
+
+align-items: center;
+
+gap: 14px;
+
+
+}
+
+.info-icon {
+width: 42px;
+height: 42px;
+
+
+flex-shrink: 0;
+
+display: flex;
+
+justify-content: center;
+align-items: center;
+
+background-color: #eef2ff;
+
+color: #4f46e5;
+
+border-radius: 10px;
+
+font-size: 1rem;
+
+font-weight: 800;
+
+
+}
+
+.info-label div {
+display: flex;
+
+
+flex-direction: column;
+
+gap: 4px;
+
+
+}
+
+.info-label strong {
+color: #1e293b;
+
+
+font-size: 1rem;
+
+font-weight: 700;
+
+
+}
+
+.info-label small {
+color: #94a3b8;
+
+
+font-size: 0.82rem;
+
+
+}
+
+.info-value {
+flex-shrink: 0;
+
+
+max-width: 50%;
+
+padding: 7px 15px;
+
+background-color: #eef2ff;
+
+color: #3730a3;
+
+border:
+    1px solid #e0e7ff;
+
+border-radius: 20px;
+
+font-size: 0.9rem;
+
+font-weight: 700;
+
+text-align: right;
+
+word-break: break-word;
+
+
+}
 
 /* =========================
-   LOGOUT BUTTON
+SPECIAL VALUES
 ========================= */
 
-#profile_link{
-    text-decoration: underline;
+.rating-value {
+background-color: #fef3c7;
+
+
+border-color: #fde68a;
+
+color: #92400e;
+
+
 }
 
+.solved-value {
+background-color: #dcfce7;
 
-#logoutBtn {
-    padding: 8px 16px;
 
-    font-size: 0.9rem;
-    font-weight: 600;
+border-color: #bbf7d0;
 
-    color: #ffffff;
+color: #166534;
 
-    background-color:
-        rgba(255, 255, 255, 0.1);
 
-    border: 1.5px solid #c7d2fe;
-    border-radius: 6px;
-
-    cursor: pointer;
-
-    white-space: nowrap;
-
-    transition: all 0.2s ease;
 }
-
-
-#logoutBtn:hover {
-    background-color: #ffffff;
-
-    color: #4f46e5;
-
-    border-color: #ffffff;
-
-    box-shadow:
-        0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-
-#logoutBtn:active {
-    transform: scale(0.96);
-}
-
 
 /* =========================
-   MAIN
+ACTIVITY SECTION
 ========================= */
 
-main {
-    flex: 1;
+.profile-activity {
+padding: 28px 32px 34px;
 
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
 
-    padding: 48px 24px;
+background-color: #f8faff;
+
+border-top:
+    1px solid #e0e7ff;
+
+
 }
 
+.profile-activity h3 {
+color: #312e81;
+
+
+font-size: 1.35rem;
+
+font-weight: 800;
+
+margin-bottom: 6px;
+
+
+}
+
+.activity-description {
+color: #64748b;
+
+
+font-size: 0.9rem;
+
+margin-bottom: 22px;
+
+
+}
 
 /* =========================
-   PROFILE CARD
+ACTIVITY GRID
 ========================= */
 
-section {
-    background-color: #ffffff;
+.activity-grid {
+display: grid;
 
-    width: 100%;
-    max-width: 500px;
 
-    padding: 32px;
+grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
-    border-radius: 16px;
+gap: 18px;
 
-    box-shadow:
-        0 20px 40px -10px rgba(67, 56, 202, 0.25);
 
-    border-top: 6px solid #4f46e5;
 }
-
-
-section h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-
-    color: #3730a3;
-
-    margin-bottom: 24px;
-
-    padding-bottom: 16px;
-
-    border-bottom: 2px dashed #c7d2fe;
-}
-
 
 /* =========================
-   PROFILE INFORMATION
+ACTIVITY CARD
 ========================= */
 
-section div {
-    display: flex;
-    flex-direction: column;
+.activity-card {
+min-height: 120px;
+
+
+display: flex;
+
+align-items: center;
+
+gap: 16px;
+
+padding: 20px;
+
+background-color: #ffffff;
+
+border:
+    1px solid #dbe3ff;
+
+border-radius: 14px;
+
+text-decoration: none;
+
+box-shadow:
+    0 6px 18px
+    rgba(67, 56, 202, 0.08);
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+
 }
 
+.activity-card:hover {
+transform: translateY(-3px);
 
-section div p {
-    display: flex;
 
-    justify-content: space-between;
-    align-items: center;
+border-color: #818cf8;
 
-    padding: 16px 8px;
+box-shadow:
+    0 12px 26px
+    rgba(67, 56, 202, 0.15);
 
-    border-bottom: 1px solid #e0e7ff;
 
-    font-size: 1rem;
-
-    transition: background-color 0.2s ease;
-
-    border-radius: 8px;
 }
 
+.activity-card-icon {
+width: 50px;
+height: 50px;
 
-section div p:hover {
-    background-color: #f8fafc;
+
+flex-shrink: 0;
+
+display: flex;
+
+justify-content: center;
+align-items: center;
+
+background:
+    linear-gradient(
+        135deg,
+        #4f46e5,
+        #3730a3
+    );
+
+color: #ffffff;
+
+border-radius: 12px;
+
+font-size: 1.05rem;
+
+font-weight: 800;
+
+
 }
 
-
-section div p:last-child {
-    border-bottom: none;
+.activity-card-text {
+flex: 1;
 }
 
+.activity-card-text h4 {
+color: #312e81;
 
-section div p strong {
-    color: #4f46e5;
 
-    font-weight: 700;
+font-size: 1rem;
+
+margin-bottom: 6px;
+
+font-weight: 800;
+
+
 }
 
+.activity-card-text p {
+color: #64748b;
 
-section div p span {
-    background-color: #e0e7ff;
 
-    color: #3730a3;
+font-size: 0.83rem;
 
-    font-weight: 700;
-    font-size: 0.9rem;
+line-height: 1.5;
 
-    padding: 6px 14px;
 
-    border-radius: 20px;
-
-    box-shadow:
-        inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.activity-arrow {
+flex-shrink: 0;
+
+
+color: #6366f1;
+
+font-size: 1.4rem;
+
+font-weight: 700;
+
+transition:
+    transform 0.2s ease;
+
+
+}
+
+.activity-card:hover .activity-arrow {
+transform: translateX(4px);
+}
 
 /* =========================
-   TABLET
+TABLET
 ========================= */
 
 @media (max-width: 900px) {
 
-    header {
-        padding: 16px 20px;
 
-        flex-direction: column;
+header {
+    padding: 16px 20px;
 
-        align-items: flex-start;
+    flex-direction: column;
 
-        gap: 16px;
-    }
+    align-items: flex-start;
 
-
-    nav {
-        width: 100%;
-
-        justify-content: flex-start;
-
-        gap: 12px 18px;
-    }
-
-
-    main {
-        padding: 32px 16px;
-    }
-
+    gap: 16px;
 }
 
 
+nav {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    gap: 12px 18px;
+}
+
+
+main {
+    padding: 32px 16px 50px;
+}
+
+
+.profile-card {
+    max-width: 700px;
+}
+
+
+}
+
 /* =========================
-   MOBILE
+MOBILE
 ========================= */
 
 @media (max-width: 600px) {
 
-    header {
-        padding: 18px 16px;
 
-        align-items: center;
-    }
+header {
+    padding: 18px 16px;
 
-
-    header h1 {
-        font-size: 1.4rem;
-    }
-
-
-    nav {
-        width: 100%;
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 10px;
-    }
-
-
-    nav a,
-    #logoutBtn {
-        width: 100%;
-
-        text-align: center;
-
-        padding: 10px 8px;
-
-        border-radius: 6px;
-    }
-
-
-    nav a {
-        background-color:
-            rgba(255, 255, 255, 0.08);
-    }
-
-
-    nav a:hover {
-        background-color:
-            rgba(255, 255, 255, 0.16);
-    }
-
-
-    section {
-        padding: 24px 20px;
-
-        border-radius: 12px;
-    }
-
-
-    section h2 {
-        font-size: 1.5rem;
-    }
-
-
-    section div p {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 12px;
-
-        padding: 16px 0;
-    }
-
+    align-items: center;
 }
 
 
+header h1 {
+    font-size: 1.4rem;
+}
+
+
+nav {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+
+nav a,
+#logoutBtn {
+    width: 100%;
+
+    text-align: center;
+
+    padding: 10px 8px;
+
+    border-radius: 6px;
+}
+
+
+nav a {
+    background-color:
+        rgba(255, 255, 255, 0.08);
+}
+
+
+nav a:hover {
+    background-color:
+        rgba(255, 255, 255, 0.16);
+}
+
+
+main {
+    padding: 24px 12px 40px;
+}
+
+
+.profile-card {
+    border-radius: 14px;
+}
+
+
+.profile-heading {
+    padding: 24px 20px;
+}
+
+
+.profile-icon {
+    width: 54px;
+    height: 54px;
+
+    font-size: 1.5rem;
+}
+
+
+.profile-heading h2 {
+    font-size: 1.5rem;
+}
+
+
+.profile-heading p {
+    font-size: 0.82rem;
+}
+
+
+.profile-info {
+    padding: 12px 18px 20px;
+}
+
+
+.info-row {
+    min-height: auto;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 18px 4px;
+}
+
+
+.info-value {
+    max-width: 100%;
+
+    margin-left: 56px;
+
+    text-align: left;
+}
+
+
+.profile-activity {
+    padding: 24px 18px 28px;
+}
+
+
+.activity-grid {
+    grid-template-columns: 1fr;
+}
+
+
+.activity-card {
+    min-height: 110px;
+}
+
+
+}
+
 /* =========================
-   VERY SMALL MOBILE
+VERY SMALL MOBILE
 ========================= */
 
 @media (max-width: 380px) {
 
-    nav {
-        grid-template-columns: 1fr;
-    }
 
-
-    header h1 {
-        font-size: 1.3rem;
-    }
-
+nav {
+    grid-template-columns: 1fr;
 }
 
+
+header h1 {
+    font-size: 1.3rem;
+}
+
+
+.profile-heading {
+    align-items: flex-start;
+}
+
+
+.profile-icon {
+    width: 48px;
+    height: 48px;
+}
+
+
+.profile-heading h2 {
+    font-size: 1.35rem;
+}
+
+
+.info-value {
+    margin-left: 0;
+}
+
+
+.activity-card {
+    padding: 16px;
+}
+
+
+}
