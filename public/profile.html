@@ -1,64 +1,222 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Profile - CodeBD</title>
-    <link rel="stylesheet" href="/css/profile.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profile - CodeBD</title>
+
+<link rel="stylesheet" href="/css/profile.css">
+
+
 </head>
 
 <body>
 
-    <header>
-        <h1>CodeBD</h1>
 
-        <nav>
-            <a href="/home">Home</a>
-            <a href="/contest">Contest</a>
-            <a href="/problem">Problems</a>
-            <a href="/user/bookmarks">Bookmarks</a>
-            <a href="/user/profile" id="profile_link">Profile</a>
-            <button id="logoutBtn" >Logout</button>
-    
-        </nav>
-    </header>
+<header>
+
+    <h1>CodeBD</h1>
+
+    <nav>
+
+        <a href="/home">Home</a>
+
+        <a href="/contest">Contest</a>
+
+        <a href="/problem">Problems</a>
+
+        <a href="/user/bookmarks">Bookmarks</a>
+
+        <a href="/user/profile" id="profile_link">Profile</a>
+
+        <button id="logoutBtn">Logout</button>
+
+    </nav>
+
+</header>
 
 
-    <main>
+<main>
 
-        <section>
+    <section class="profile-card">
 
-            <h2>My Profile</h2>
+        <div class="profile-heading">
 
-            <div>
-                <p>
-                    <strong>Username:</strong>
-                    <span id="username">Loading...</span>
-                </p>
-
-                <p>
-                    <strong>Email:</strong>
-                    <span id="email">Loading...</span>
-                </p>
-
-                <p>
-                    <strong>Rating:</strong>
-                    <span id="rating">Loading...</span>
-                </p>
-
-                <p>
-                    <strong>Joined:</strong>
-                    <span id="createdAt">Loading...</span>
-                </p>
+            <div class="profile-icon">
+                <span>👤</span>
             </div>
 
-        </section>
+            <div>
+                <h2 id="headingName">My Profile</h2>
+                <p>View your CodeBD account information</p>
+            </div>
 
-    </main>
+        </div>
 
 
-    <script src="/js/profile.js"></script>
+        <div class="profile-info">
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    <span class="info-icon">👤</span>
+
+                    <div>
+                        <strong>Username</strong>
+                        <small>Your CodeBD username</small>
+                    </div>
+                </div>
+
+                <span class="info-value" id="username">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    <span class="info-icon">✉</span>
+
+                    <div>
+                        <strong>Email</strong>
+                        <small>Your registered email</small>
+                    </div>
+                </div>
+
+                <span class="info-value" id="email">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    <span class="info-icon">★</span>
+
+                    <div>
+                        <strong>Rating</strong>
+                        <small>Your current CodeBD rating</small>
+                    </div>
+                </div>
+
+                <span class="info-value rating-value" id="rating">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    <span class="info-icon">✓</span>
+
+                    <div>
+                        <strong>Total Solved</strong>
+                        <small>Total problems solved</small>
+                    </div>
+                </div>
+
+                <span class="info-value solved-value" id="totalSolved">
+                    Loading...
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    <span class="info-icon">📅</span>
+
+                    <div>
+                        <strong>Joined</strong>
+                        <small>CodeBD member since</small>
+                    </div>
+                </div>
+
+                <span class="info-value" id="createdAt">
+                    Loading...
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-activity">
+
+            <h3>My Activity</h3>
+
+            <p class="activity-description">
+                View your submissions and contest participation.
+            </p>
+
+
+            <div class="activity-grid">
+
+                <a href="/user/submissions" class="activity-card">
+
+                    <div class="activity-card-icon">
+                        &lt;/&gt;
+                    </div>
+
+                    <div class="activity-card-text">
+
+                        <h4>Submissions</h4>
+
+                        <p>
+                            View your submitted solutions and verdicts.
+                        </p>
+
+                    </div>
+
+                    <span class="activity-arrow">→</span>
+
+                </a>
+
+
+                <a href="/user/contests" class="activity-card">
+
+                    <div class="activity-card-icon">
+                        🏆
+                    </div>
+
+                    <div class="activity-card-text">
+
+                        <h4>Contests</h4>
+
+                        <p>
+                            View contests you have participated in.
+                        </p>
+
+                    </div>
+
+                    <span class="activity-arrow">→</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="/js/profile.js"></script>
+
 
 </body>
+
 </html>

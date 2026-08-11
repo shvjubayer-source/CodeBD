@@ -42,9 +42,21 @@ async function createUser(username, email, password){
     return result.rows[0];
 }
 
+async function getSolveCount(username){
+    const result=await pool.query(
+
+
+    );
+
+
+    return result.rows[0];
+}
+
+
 module.exports={
     findUserByEmail,
     findByUsername,
     getAllUsers,
-    createUser
+    createUser,
+    getSolveCount
 }

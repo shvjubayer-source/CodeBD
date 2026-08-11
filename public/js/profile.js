@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const email = document.getElementById("email");
     const rating = document.getElementById("rating");
     const createdAt = document.getElementById("createdAt");
+    const solveCount=document.getElementById("totalSolved");
 
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -44,7 +45,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         username.textContent = data.username;
         email.textContent = data.email;
         rating.textContent = data.rating;
+        solveCount.textContent=data.solve_count;
 
+        document.getElementById("headingName").textContent=data.username;
 
         const joinedDate = new Date(data.created_at);
 
