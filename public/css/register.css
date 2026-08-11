@@ -1,0 +1,149 @@
+/* Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f1f5f9;
+    color: #1e293b;
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport unit for mobile browser toolbars */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+}
+
+/* Heading */
+h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form Container Card */
+#registerForm {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 400px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* Form Fields */
+#registerForm div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    height: 44px; /* Optimized touch target size for mobile tap */
+    padding: 0 14px;
+    font-size: 1rem; /* Minimum 16px equivalent to prevent iOS auto-zoom on focus */
+    color: #0f172a;
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Input Focus State */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    background-color: #ffffff;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    height: 48px;
+    margin-top: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #4f46e5;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #4338ca;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Footer Link Section */
+p {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #64748b;
+    text-align: center;
+}
+
+p a {
+    color: #4f46e5;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+p a:hover {
+    text-decoration: underline;
+    color: #3730a3;
+}
+
+/* -------------------------------------------------- */
+/* Responsive Media Queries                           */
+/* -------------------------------------------------- */
+
+/* Mobile Phones (< 480px) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+
+    #registerForm {
+        padding: 20px 16px; /* Tighten padding to maximize screen area */
+        border-radius: 10px;
+    }
+
+    #registerForm div {
+        margin-bottom: 16px;
+    }
+}
+
+/* Short Screens / Landscape Mode */
+@media (max-height: 600px) {
+    body {
+        justify-content: flex-start; /* Ensures top/bottom content isn't clipped when mobile keyboard opens */
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+}
