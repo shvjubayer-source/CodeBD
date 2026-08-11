@@ -9,7 +9,7 @@ The project is being built using **HTML, CSS, JavaScript, Node.js, Express.js, a
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/ss1.jng" width="100%" alt="CodeBD Screenshot 1">
+  <img src="screenshots/ss1.jpg" width="100%" alt="CodeBD Screenshot 1">
   <!-- <img src="screenshots/ss2.png" width="48%" alt="CodeBD Screenshot 2"> -->
 </p>
 
