@@ -10,7 +10,7 @@ The project is being built using **HTML, CSS, JavaScript, Node.js, Express.js, a
 
 <p align="center">
   <img src="screenshots/ss1.png" width="48%" alt="CodeBD Screenshot 1">
-  <img src="screenshots/ss2.png" width="48%" alt="CodeBD Screenshot 2">
+  <!-- <img src="screenshots/ss2.png" width="48%" alt="CodeBD Screenshot 2"> -->
 </p>
 
 ---
