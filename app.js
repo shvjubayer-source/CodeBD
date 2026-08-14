@@ -10,10 +10,12 @@ app.use(express.static("public"));
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const userRoutes=require("./routes/userRoutes");
+const problemRoutes=require("./routes/problemRoutes");
 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/problems", problemRoutes);
 
 //for frontend
 
