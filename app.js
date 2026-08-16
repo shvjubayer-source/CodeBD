@@ -10,10 +10,13 @@ app.use(express.static("public"));
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const userRoutes=require("./routes/userRoutes");
-
+const problemRoutes=require("./routes/problemRoutes");
+const bookmarksRoutes=require("./routes/bookmarksRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/problems", problemRoutes);
+app.use("/api/bookmarks", bookmarksRoutes);
 
 //for frontend
 
@@ -44,7 +47,7 @@ app.get("/contest", (req, res)=>{
     res.sendFile(path.join(__dirname, "public", "contest.html"));
 });
 
-app.get("/problem", (req, res)=>{
+app.get("/problems", (req, res)=>{
     res.sendFile(path.join(__dirname, "public", "problem.html"));
 });
 
