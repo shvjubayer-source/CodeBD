@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse and filter programming problems on CodeBD.">
+    <title>Problems | CodeBD</title>
+    <link rel="stylesheet" href="/css/problem.css">
+    <script src="/js/problem.js" defer></script>
+</head>
+<body>
+    <header>
+
+        <h1>CodeBD</h1>
+
+        <nav>
+
+            <a href="/home">Home</a>
+
+            <a href="/contest">Contest</a>
+
+            <a href="/problems">Problems</a>
+
+            <a href="/user/bookmarks">Bookmarks</a>
+
+            <a href="/user/profile" id="profile_link">Profile</a>
+
+            <button id="logoutBtn">Logout</button>
+
+        </nav>
+
+    </header>
+
+    <main class="page-shell">
+        <section class="page-intro" aria-labelledby="page-title">
+            <div>
+                <p class="eyebrow">Practice library</p>
+                <h2 id="page-title">Problems</h2>
+                <p class="intro-copy">Choose a challenge, sharpen your skills, and save useful problems for later.</p>
+            </div>
+        </section>
+
+        <section class="filter-panel" aria-labelledby="filter-title">
+            <div class="filter-heading">
+                <div>
+                    <h3 id="filter-title">Find a problem</h3>
+                    <p>Search by title or narrow the list by topic.</p>
+                </div>
+                <button class="clear-button" type="button">Clear filters</button>
+            </div>
+
+            <div class="filter-controls">
+                <label class="search-field">
+                    <span class="visually-hidden">Search problems</span>
+                    <span aria-hidden="true">⌕</span>
+                    <input type="search" name="search" placeholder="Search problems...">
+                </label>
+
+                <label class="select-field">
+                    <span class="visually-hidden">Filter by difficulty</span>
+                    <select name="difficulty">
+                        <option value="">All difficulties</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <fieldset class="tag-filters" id="tagFilters">
+                <legend>Filter by tags</legend>
+            </fieldset>
+        </section>
+
+        <section class="problems-section" aria-labelledby="problem-list-title">
+            <div class="list-heading">
+                <h3 id="problem-list-title">All problems</h3>
+                <p>Showing <strong id="problemCount">0</strong> problems</p>
+            </div>
+
+            <div class="problem-list" id="problemList" aria-live="polite">
+                <p class="list-message">Loading problems...</p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
