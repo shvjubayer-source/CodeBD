@@ -42,15 +42,20 @@ async function createUser(username, email, password){
     return result.rows[0];
 }
 
-async function getSolveCount(username){
+async function getSolveCount(userId){
     const result=await pool.query(
-
+        `SELECT COUNT(*) AS solve_count
+        FROM submissions s
+        WHERE s.user_id=$1
+        AND s.verdict='Accepted'`,
+        [userId]
 
     );
 
-
-    return result.rows[0];
+    return Number(result.rows[0].solve_count);
 }
+
+
 
 
 module.exports={

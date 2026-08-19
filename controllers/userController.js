@@ -11,14 +11,14 @@ async function getProfile(req, res){
             });
          }
 
-        //  const solve_count=await User.getSolveCount(req.user.username);
+         const solve_count=await User.getSolveCount(req.user.userId);
 
          res.json({
             username:user.username,
             email: user.email,
             rating: user.rating,
             created_at: user.created_at,
-            solve_count: 10
+            solve_count: solve_count
          });
     }
 
