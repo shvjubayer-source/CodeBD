@@ -2,7 +2,7 @@ const submissionTableBody = document.getElementById("submissionTableBody");
 const totalSubmissions = document.getElementById("totalSubmissions");
 const usernameElement = document.getElementById("username");
 const logoutBtn = document.getElementById("logoutBtn");
-
+const user_name=document.getElementById("username");
 
 /* =========================
 GET TOKEN
@@ -29,39 +29,48 @@ async function loadSubmissions() {
     try {
 
         const response = await fetch("/api/submissions", {
-
             method: "GET",
-
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-
         });
 
+        const response1 = await fetch("/api/user/profile", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
         /* =========================
         INVALID / EXPIRED TOKEN
         ========================= */
-
         if (response.status === 401 || response.status === 403) {
-
             localStorage.removeItem("token");
-
             window.location.href = "/auth/login";
+            return;
+        }
 
+        if (response1.status === 401 || response1.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "/auth/login";
             return;
         }
 
 
         if (!response.ok) {
-
             throw new Error("Could not fetch submissions");
+        }
 
+        if (!response1.ok) {
+            throw new Error("Could not fetch submissions");
         }
 
 
         const submissions = await response.json();
+        const profile_name=await response1.json()
 
+        document.getElementById("username").textContent=profile_name.username;
 
         /* =========================
         TOTAL SUBMISSIONS

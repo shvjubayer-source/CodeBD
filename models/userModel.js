@@ -61,6 +61,11 @@ async function getSubmissions(userId) {
     const result=await pool.query(
         `SELECT *, 
         (
+          SELECT username
+          FROM users u
+          WHERE u.user_id=s.user_id
+        ) as user_name,
+        (
           SELECT title
           FROM problems p
           WHERE s.problem_id=p.problem_id
