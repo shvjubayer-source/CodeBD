@@ -12,11 +12,14 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes=require("./routes/userRoutes");
 const problemRoutes=require("./routes/problemRoutes");
 const bookmarksRoutes=require("./routes/bookmarksRoutes");
+const submissionRoutes=require("./routes/submissionsRoutes");
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/bookmarks", bookmarksRoutes);
+app.use("/api/submissions", submissionRoutes);
 
 //for frontend
 
@@ -51,7 +54,9 @@ app.get("/problems", (req, res)=>{
     res.sendFile(path.join(__dirname, "public", "problem.html"));
 });
 
-
+app.get("/submissions", (req, res)=>{
+    res.sendFile(path.join(__dirname, "public", "submissions.html"));
+});
 
 
 

@@ -1,0 +1,155 @@
+USERS(
+    user_id PK,
+	username,	
+	email,
+	password,
+	rating,
+	created_at
+
+)
+
+
+
+
+BLOG_POST(
+    post_id PK,
+	user_id FK → USER(user_id)
+	title,
+    content 
+)
+
+
+
+
+BLOG_COMMENT(
+   	comment_id PK,
+    user_id FK → USER(user_id),
+    post_id FK → BLOG_POST(post_id),
+	text
+	
+)
+
+
+
+
+TAGS(
+	tag_id PK,
+	tag_name
+)
+
+
+
+
+BLOG_TAG(
+    post_id FK → BLOG_POST(post_id),
+   	tag_id FK → TAG(tag_id),
+   	PK(post_id, tag_id)
+)
+
+
+
+
+BLOG_LIKE(
+    user_id FK → USER(user_id),
+    post_id FK → BLOG_POST(post_id),
+    type,
+    PK(user_id, post_id)
+)
+
+
+
+
+BLOG_BOOKMARKS(
+    user_id FK → USER(user_id),
+    post_id FK → BLOG_POST(post_id),
+    PK(user_id, post_id)
+)
+
+
+
+PROBLEMS(
+    problem_id PK,
+	title,
+    content,
+	difficulty,
+	time_limit,
+	memory_limit,
+	created_at
+)
+
+PROBLEM_TAG(
+    problem_id FK → PROBLEM(problem_id),
+    tag_id FK → TAG(tag_id),
+    PK(problem_id, tag_id)
+)
+
+PROBLEM_BOOKMARKS(
+    user_id FK → USER(user_id),
+    problem_id FK → PROBLEM(problem_id),
+    PK(user_id, problem_id)
+)
+
+SUBMISSIONS(
+    submission_id PK,
+    user_id FK → USER(user_id),
+    problem_id FK → PROBLEM(problem_id),
+	language,
+	code,
+	verdict,
+	execution_time,
+	memory_used,
+	submitted_at
+
+)
+
+
+
+
+TESTCASE(
+    test_id PK,
+    problem_id FK → PROBLEM(problem_id),
+    input,
+    expected_output
+)
+
+
+
+
+SOLUTION(
+    solution_id PK,
+    problem_id FK → PROBLEM(problem_id),
+    content
+)
+
+
+
+
+CONTEST(
+    contest_id PK,
+    title,
+    description,
+    start_time,
+
+)
+
+
+
+CONTEST_PROBLEM(
+    contest_id FK → CONTEST(contest_id),
+    problem_id FK → PROBLEM(problem_id),
+    problem_order,
+    points,
+    PK(contest_id, problem_id)
+)
+
+
+
+CONTEST_PARTICIPATION(
+    user_id FK → USER(user_id),
+    contest_id FK → CONTEST(contest_id),
+    solve_count,
+    prev_ratings,
+    rating change,
+    registered_at,
+    PK(user_id, contest_id)
+)

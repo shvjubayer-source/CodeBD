@@ -1,0 +1,767 @@
+/* =========================
+RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f5f7fb;
+
+    color: #1f2937;
+
+    min-height: 100vh;
+}
+
+
+/* =========================
+HEADER
+========================= */
+
+header {
+
+    background:
+        linear-gradient(
+            to right,
+            #4f46e5,
+            #3730a3
+        );
+
+    padding: 16px 32px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 24px;
+
+    box-shadow:
+        0 4px 12px rgba(55, 48, 163, 0.3);
+}
+
+
+header h1 {
+
+    font-size: 1.5rem;
+
+    font-weight: 800;
+
+    color: #ffffff;
+
+    letter-spacing: 0.5px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+NAVBAR
+========================= */
+
+nav {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+
+nav a {
+
+    color: #c7d2fe;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    font-size: 0.95rem;
+
+    white-space: nowrap;
+
+    transition: all 0.2s ease;
+}
+
+
+nav a:hover {
+
+    color: #ffffff;
+
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+
+/* =========================
+PROFILE NAV LINK
+========================= */
+
+#profile_link {
+
+    text-decoration: underline;
+}
+
+
+/* =========================
+LOGOUT BUTTON
+========================= */
+
+#logoutBtn {
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+
+    background: rgba(255, 255, 255, 0.1);
+
+    color: #ffffff;
+
+    padding: 8px 16px;
+
+    border-radius: 7px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    font-size: 0.9rem;
+
+    transition: all 0.2s ease;
+}
+
+
+#logoutBtn:hover {
+
+    background: #ffffff;
+
+    color: #3730a3;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+MAIN
+========================= */
+
+main {
+
+    width: min(1250px, 94%);
+
+    margin: 0 auto;
+
+    padding: 45px 0 70px;
+}
+
+
+/* =========================
+PAGE HEADING
+========================= */
+
+.page-heading {
+
+    margin-bottom: 28px;
+}
+
+
+.section-label {
+
+    color: #4f46e5;
+
+    font-size: 0.8rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 6px;
+}
+
+
+.page-heading h2 {
+
+    font-size: 2rem;
+
+    color: #111827;
+
+    font-weight: 800;
+
+    margin-bottom: 6px;
+}
+
+
+.page-description {
+
+    color: #6b7280;
+
+    font-size: 0.98rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+USER SUMMARY
+========================= */
+
+.user-summary {
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 22px 26px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 28px;
+
+    box-shadow:
+        0 4px 16px rgba(15, 23, 42, 0.05);
+}
+
+
+.user-avatar {
+
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #6366f1
+        );
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 1.6rem;
+
+    flex-shrink: 0;
+}
+
+
+.user-info {
+
+    flex: 1;
+}
+
+
+.user-label {
+
+    display: block;
+
+    font-size: 0.8rem;
+
+    color: #9ca3af;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+
+.user-info h3 {
+
+    color: #111827;
+
+    font-size: 1.25rem;
+
+    font-weight: 750;
+}
+
+
+/* =========================
+SUBMISSION COUNT
+========================= */
+
+.submission-count {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    padding-left: 30px;
+
+    border-left: 1px solid #e5e7eb;
+}
+
+
+.submission-count span {
+
+    font-size: 0.78rem;
+
+    color: #6b7280;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+
+.submission-count strong {
+
+    font-size: 1.6rem;
+
+    color: #4f46e5;
+}
+
+
+/* =========================
+SUBMISSION SECTION
+========================= */
+
+.submission-section {
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* =========================
+SUBMISSION HEADER
+========================= */
+
+.submission-header {
+
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.submission-header h3 {
+
+    font-size: 1.15rem;
+
+    color: #111827;
+
+    margin-bottom: 4px;
+}
+
+
+.submission-header p {
+
+    color: #9ca3af;
+
+    font-size: 0.87rem;
+}
+
+
+/* =========================
+TABLE
+========================= */
+
+.table-container {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 900px;
+}
+
+
+/* =========================
+TABLE HEADER
+========================= */
+
+thead {
+
+    background: #f8fafc;
+}
+
+
+th {
+
+    text-align: left;
+
+    padding: 14px 18px;
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+
+    font-weight: 750;
+
+    letter-spacing: 0.4px;
+
+    text-transform: uppercase;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* =========================
+TABLE BODY
+========================= */
+
+td {
+
+    padding: 17px 18px;
+
+    font-size: 0.9rem;
+
+    color: #4b5563;
+
+    border-bottom: 1px solid #edf0f4;
+
+    vertical-align: middle;
+}
+
+
+tbody tr {
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+tbody tr:hover {
+
+    background: #f8f9ff;
+}
+
+
+tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+/* =========================
+SUBMISSION ID
+========================= */
+
+.submission-id {
+
+    color: #9ca3af;
+
+    font-size: 0.84rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+DATE
+========================= */
+
+.submission-date {
+
+    color: #374151;
+
+    font-weight: 500;
+}
+
+
+.submission-date span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 0.76rem;
+
+    color: #9ca3af;
+}
+
+
+/* =========================
+PROBLEM NAME
+========================= */
+
+.problem-name {
+
+    color: #4338ca;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
+    transition: color 0.2s ease;
+}
+
+
+.problem-name:hover {
+
+    color: #6366f1;
+
+    text-decoration: underline;
+}
+
+
+/* =========================
+LANGUAGE
+========================= */
+
+.language {
+
+    display: inline-block;
+
+    background: #eef2ff;
+
+    color: #4338ca;
+
+    padding: 5px 10px;
+
+    border-radius: 6px;
+
+    font-size: 0.79rem;
+
+    font-weight: 650;
+}
+
+
+/* =========================
+VERDICT
+========================= */
+
+.verdict {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 0.76rem;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+/* Accepted */
+
+.accepted {
+
+    color: #15803d;
+
+    background: #dcfce7;
+
+    border: 1px solid #bbf7d0;
+}
+
+
+/* Wrong Answer */
+
+.wrong-answer {
+
+    color: #dc2626;
+
+    background: #fee2e2;
+
+    border: 1px solid #fecaca;
+}
+
+
+/* Time Limit Exceeded */
+
+.time-limit {
+
+    color: #b45309;
+
+    background: #fef3c7;
+
+    border: 1px solid #fde68a;
+}
+
+
+/* Runtime Error */
+
+.runtime-error {
+
+    color: #c2410c;
+
+    background: #ffedd5;
+
+    border: 1px solid #fed7aa;
+}
+
+
+/* Compilation Error */
+
+.compilation-error {
+
+    color: #7c3aed;
+
+    background: #ede9fe;
+
+    border: 1px solid #ddd6fe;
+}
+
+
+/* Memory Limit Exceeded */
+
+.memory-limit {
+
+    color: #0369a1;
+
+    background: #e0f2fe;
+
+    border: 1px solid #bae6fd;
+}
+
+
+/* Pending */
+
+.pending {
+
+    color: #475569;
+
+    background: #f1f5f9;
+
+    border: 1px solid #e2e8f0;
+}
+
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+    header {
+
+        padding: 15px 20px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    nav {
+
+        justify-content: flex-start;
+
+        gap: 14px;
+    }
+
+
+    main {
+
+        width: 94%;
+
+        padding-top: 30px;
+    }
+
+
+    .page-heading h2 {
+
+        font-size: 1.7rem;
+    }
+
+
+    .user-summary {
+
+        padding: 18px;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .user-summary {
+
+        flex-wrap: wrap;
+    }
+
+
+    .submission-count {
+
+        width: 100%;
+
+        flex-direction: row;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        border-left: none;
+
+        border-top: 1px solid #e5e7eb;
+
+        padding-left: 0;
+
+        padding-top: 15px;
+
+        margin-top: 5px;
+    }
+
+
+    .submission-count strong {
+
+        font-size: 1.35rem;
+    }
+
+
+    nav {
+
+        gap: 12px;
+    }
+
+
+    nav a {
+
+        font-size: 0.85rem;
+    }
+
+}
