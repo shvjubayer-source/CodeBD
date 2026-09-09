@@ -19,6 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        // Show Admin Panel link only for admins
+        showAdminNavLink();
+
         const response = await fetch("/api/user/profile", {
             method: "GET",
             headers: {
@@ -68,22 +71,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // logout
 
-    logoutBtn.addEventListener("click", async () => {
-
-        try {
-
-            logoutBtn.addEventListener("click", () => {
-                localStorage.removeItem("token");
-
-                window.location.href = "/auth/login";
-            });
-
-        } catch (error) {
-
-            console.error("Logout error:", error);
-
-        }
-
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("token");
+        window.location.href = "/auth/login";
     });
 
 });

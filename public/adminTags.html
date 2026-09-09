@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tags — Admin — CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <header>
+        <a href="/home" class="logo">CodeBD</a>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/problems">Problems</a>
+            <a href="/admin" class="active">Admin</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <p class="sidebar-title">Overview</p>
+            <a href="/admin" class="sidebar-link"><span>🏠</span> Dashboard</a>
+            <p class="sidebar-title" style="margin-top:20px">Manage</p>
+            <a href="/admin/problems" class="sidebar-link"><span>📋</span> Problems</a>
+            <a href="/admin/contests" class="sidebar-link"><span>🏆</span> Contests</a>
+            <a href="/admin/users" class="sidebar-link"><span>👥</span> Users</a>
+            <a href="/admin/submissions" class="sidebar-link"><span>📤</span> Submissions</a>
+            <a href="/admin/tags" class="sidebar-link active"><span>🏷</span> Tags</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Tags</h1>
+                    <p class="page-subtitle">Manage problem tags and categories</p>
+                </div>
+                <div class="header-badge"><span class="badge-dot"></span> Admin</div>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+
+            <!-- ADD TAG -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Add New Tag</h2>
+                </div>
+                <form id="createTagForm" class="problem-form" style="flex-direction:row; align-items:flex-end; flex-wrap:wrap;">
+                    <div class="form-group" style="flex:1; min-width:200px">
+                        <label for="tagName">Tag Name</label>
+                        <input type="text" id="tagName" placeholder="e.g. Dynamic Programming" required>
+                    </div>
+                    <div class="form-actions" style="margin-top:0">
+                        <button type="submit" class="btn-primary" id="createTagBtn">Add Tag</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- TAGS LIST -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>All Tags</h2>
+                    <button class="btn-outline" id="refreshBtn">↻ Refresh</button>
+                </div>
+                <div class="tags-grid" id="tagsGrid">
+                    <div class="loading-row" style="padding:40px; text-align:center">
+                        <div class="spinner" style="display:inline-block"></div> Loading tags...
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- DELETE CONFIRM -->
+    <div id="deleteModal" class="modal-overlay hidden">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2>Delete Tag</h2>
+                <button class="modal-close" id="closeDeleteBtn">✕</button>
+            </div>
+            <p class="delete-warning">Delete tag <strong id="deleteTagName"></strong>? This will remove it from all associated problems.</p>
+            <div class="form-actions" style="padding:0 24px 24px">
+                <button class="btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                <button class="btn-ghost" id="cancelDeleteBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/adminTags.js"></script>
+</body>
+</html>

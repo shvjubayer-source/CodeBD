@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — CodeBD</title>
+    <meta name="description" content="CodeBD Admin Panel — Manage programming problems, edit and delete entries.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/adminproblem.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/home" class="logo">CodeBD</a>
+
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/problems">Problems</a>
+            <a href="/submissions">Submissions</a>
+            <a href="/admin/problems" class="active">Admin Panel</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <p class="sidebar-title">Management</p>
+            <a href="#" class="sidebar-link active" id="sidebarProblems">
+                <span class="sidebar-icon">📋</span>
+                Problems
+            </a>
+            <a href="#" class="sidebar-link" id="sidebarAddProblem">
+                <span class="sidebar-icon">➕</span>
+                Add Problem
+            </a>
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- PAGE TITLE -->
+            <div class="page-header">
+                <div>
+                    <h1>Admin Panel</h1>
+                    <p class="page-subtitle">Manage problems and content on CodeBD</p>
+                </div>
+                <div class="header-badge">
+                    <span class="badge-dot"></span>
+                    Admin
+                </div>
+            </div>
+
+
+            <!-- STATUS MESSAGE -->
+            <div id="message" class="message hidden"></div>
+
+
+            <!-- ===== CREATE PROBLEM SECTION ===== -->
+            <section class="card" id="createSection">
+                <div class="card-header">
+                    <h2>Add New Problem</h2>
+                    <button class="btn-ghost" id="toggleCreateBtn">Hide</button>
+                </div>
+
+                <form id="createForm" class="problem-form">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="createTitle">Problem Title</label>
+                            <input
+                                type="text"
+                                id="createTitle"
+                                placeholder="e.g. Two Sum"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="createDifficulty">Difficulty</label>
+                            <select id="createDifficulty" required>
+                                <option value="">Select difficulty</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="createStatement">Problem Statement</label>
+                        <textarea
+                            id="createStatement"
+                            rows="6"
+                            placeholder="Describe the problem in detail..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="createTimeLimit">Time Limit (ms)</label>
+                            <input
+                                type="number"
+                                id="createTimeLimit"
+                                placeholder="e.g. 1000"
+                                min="100"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="createMemoryLimit">Memory Limit (MB)</label>
+                            <input
+                                type="number"
+                                id="createMemoryLimit"
+                                placeholder="e.g. 256"
+                                min="16"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="createSubmitBtn">
+                            Create Problem
+                        </button>
+                        <button type="reset" class="btn-ghost">Clear</button>
+                    </div>
+
+                </form>
+            </section>
+
+
+            <!-- ===== PROBLEMS TABLE SECTION ===== -->
+            <section class="card" id="problemsSection">
+                <div class="card-header">
+                    <h2>All Problems</h2>
+                    <div class="table-controls">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="search-input"
+                            placeholder="Search problems..."
+                        >
+                        <button class="btn-outline" id="refreshBtn">↻ Refresh</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Difficulty</th>
+                                <th>Time (ms)</th>
+                                <th>Memory (MB)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="problemTableBody">
+                            <tr>
+                                <td colspan="6" class="loading-row">
+                                    <div class="spinner"></div>
+                                    Loading problems...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="problemCount" class="problem-count"></div>
+            </section>
+
+        </main>
+    </div>
+
+
+    <!-- ===== EDIT MODAL ===== -->
+    <div id="editModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Problem</h2>
+                <button class="modal-close" id="closeModalBtn">✕</button>
+            </div>
+
+            <form id="editForm" class="problem-form">
+                <input type="hidden" id="editProblemId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editTitle">Problem Title</label>
+                        <input type="text" id="editTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDifficulty">Difficulty</label>
+                        <select id="editDifficulty" required>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStatement">Problem Statement</label>
+                    <textarea id="editStatement" rows="6" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editTimeLimit">Time Limit (ms)</label>
+                        <input type="number" id="editTimeLimit" min="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemoryLimit">Memory Limit (MB)</label>
+                        <input type="number" id="editMemoryLimit" min="16" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="editSubmitBtn">
+                        Save Changes
+                    </button>
+                    <button type="button" class="btn-ghost" id="cancelEditBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div id="deleteModal" class="modal-overlay hidden">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2>Delete Problem</h2>
+                <button class="modal-close" id="closeDeleteModalBtn">✕</button>
+            </div>
+            <p class="delete-warning">
+                Are you sure you want to delete <strong id="deleteProblemTitle"></strong>?
+                This action cannot be undone.
+            </p>
+            <div class="form-actions">
+                <button class="btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                <button class="btn-ghost" id="cancelDeleteBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/js/adminproblem.js"></script>
+
+</body>
+
+</html>

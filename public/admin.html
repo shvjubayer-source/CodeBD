@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — CodeBD</title>
+    <meta name="description" content="CodeBD Admin Dashboard — Overview of platform statistics and management.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <a href="/home" class="logo">CodeBD</a>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/problems">Problems</a>
+            <a href="/admin" class="active">Admin</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <p class="sidebar-title">Overview</p>
+            <a href="/admin" class="sidebar-link active">
+                <span>🏠</span> Dashboard
+            </a>
+
+            <p class="sidebar-title" style="margin-top:20px">Manage</p>
+            <a href="/admin/problems" class="sidebar-link">
+                <span>📋</span> Problems
+            </a>
+            <a href="/admin/contests" class="sidebar-link">
+                <span>🏆</span> Contests
+            </a>
+            <a href="/admin/users" class="sidebar-link">
+                <span>👥</span> Users
+            </a>
+            <a href="/admin/submissions" class="sidebar-link">
+                <span>📤</span> Submissions
+            </a>
+            <a href="/admin/tags" class="sidebar-link">
+                <span>🏷</span> Tags
+            </a>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                    <p class="page-subtitle">Platform overview and quick management</p>
+                </div>
+                <div class="header-badge">
+                    <span class="badge-dot"></span> Admin
+                </div>
+            </div>
+
+            <!-- STATS GRID -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon problems">📋</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Problems</p>
+                        <h2 class="stat-value" id="totalProblems">—</h2>
+                    </div>
+                    <a href="/admin/problems" class="stat-link">Manage →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon contests">🏆</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Contests</p>
+                        <h2 class="stat-value" id="totalContests">—</h2>
+                    </div>
+                    <a href="/admin/contests" class="stat-link">Manage →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon users">👥</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Users</p>
+                        <h2 class="stat-value" id="totalUsers">—</h2>
+                    </div>
+                    <a href="/admin/users" class="stat-link">Manage →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon submissions">📤</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Submissions</p>
+                        <h2 class="stat-value" id="totalSubmissions">—</h2>
+                    </div>
+                    <a href="/admin/submissions" class="stat-link">View →</a>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Quick Actions</h2>
+                </div>
+                <div class="quick-actions">
+                    <a href="/admin/problems" class="action-card problems-action">
+                        <span class="action-icon">📋</span>
+                        <div>
+                            <h3>Problems</h3>
+                            <p>Add, edit or delete programming problems</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+                    <a href="/admin/contests" class="action-card contests-action">
+                        <span class="action-icon">🏆</span>
+                        <div>
+                            <h3>Contests</h3>
+                            <p>Create and manage programming contests</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+                    <a href="/admin/users" class="action-card users-action">
+                        <span class="action-icon">👥</span>
+                        <div>
+                            <h3>Users</h3>
+                            <p>View all users and manage their roles</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+                    <a href="/admin/submissions" class="action-card submissions-action">
+                        <span class="action-icon">📤</span>
+                        <div>
+                            <h3>Submissions</h3>
+                            <p>View all user submissions across the platform</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+                    <a href="/admin/tags" class="action-card tags-action">
+                        <span class="action-icon">🏷</span>
+                        <div>
+                            <h3>Tags</h3>
+                            <p>Manage problem tags and categories</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

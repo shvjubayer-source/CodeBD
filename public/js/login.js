@@ -38,7 +38,15 @@ loginForm.addEventListener("submit", async (event) => {
         // }, 1000);
 
         // window.location.href = "/user/profile";
-        window.location.href="/user/profile";
+        console.log('i am here');
+        if (data.role === "admin") {
+            window.location.href = "/admin";
+            console.log('admin page');
+        }
+        else {
+            window.location.href = "/user/profile";
+            console.log('profile page');
+        }
 
     } catch (error) {
         console.error(error);

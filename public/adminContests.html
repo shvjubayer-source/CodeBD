@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Contests — Admin — CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <header>
+        <a href="/home" class="logo">CodeBD</a>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/problems">Problems</a>
+            <a href="/admin" class="active">Admin</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <p class="sidebar-title">Overview</p>
+            <a href="/admin" class="sidebar-link">
+                <span>🏠</span> Dashboard
+            </a>
+            <p class="sidebar-title" style="margin-top:20px">Manage</p>
+            <a href="/admin/problems" class="sidebar-link">
+                <span>📋</span> Problems
+            </a>
+            <a href="/admin/contests" class="sidebar-link active">
+                <span>🏆</span> Contests
+            </a>
+            <a href="/admin/users" class="sidebar-link">
+                <span>👥</span> Users
+            </a>
+            <a href="/admin/submissions" class="sidebar-link">
+                <span>📤</span> Submissions
+            </a>
+            <a href="/admin/tags" class="sidebar-link">
+                <span>🏷</span> Tags
+            </a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Contests</h1>
+                    <p class="page-subtitle">Create and manage programming contests</p>
+                </div>
+                <div class="header-badge"><span class="badge-dot"></span> Admin</div>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+
+            <!-- CREATE CONTEST -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Create New Contest</h2>
+                    <button class="btn-ghost" id="toggleCreateBtn">Hide</button>
+                </div>
+                <form id="createContestForm" class="problem-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contestTitle">Contest Title</label>
+                            <input type="text" id="contestTitle" placeholder="e.g. CodeBD Weekly #1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contestStartTime">Start Time</label>
+                            <input type="datetime-local" id="contestStartTime" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contestDescription">Description</label>
+                        <textarea id="contestDescription" rows="3" placeholder="Describe the contest..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="createContestBtn">Create Contest</button>
+                        <button type="reset" class="btn-ghost">Clear</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- CONTESTS TABLE -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>All Contests</h2>
+                    <button class="btn-outline" id="refreshBtn">↻ Refresh</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Start Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contestTableBody">
+                            <tr><td colspan="5" class="loading-row"><div class="spinner"></div>Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="editModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Contest</h2>
+                <button class="modal-close" id="closeModalBtn">✕</button>
+            </div>
+            <form id="editContestForm" class="problem-form">
+                <input type="hidden" id="editContestId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editContestTitle">Contest Title</label>
+                        <input type="text" id="editContestTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editContestStartTime">Start Time</label>
+                        <input type="datetime-local" id="editContestStartTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editContestDescription">Description</label>
+                    <textarea id="editContestDescription" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="editContestBtn">Save Changes</button>
+                    <button type="button" class="btn-ghost" id="cancelEditBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div id="deleteModal" class="modal-overlay hidden">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2>Delete Contest</h2>
+                <button class="modal-close" id="closeDeleteBtn">✕</button>
+            </div>
+            <p class="delete-warning">Are you sure you want to delete <strong id="deleteContestTitle"></strong>? This cannot be undone.</p>
+            <div class="form-actions" style="padding:0 24px 24px">
+                <button class="btn-danger" id="confirmDeleteBtn">Yes, Delete</button>
+                <button class="btn-ghost" id="cancelDeleteBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/adminContests.js"></script>
+</body>
+</html>

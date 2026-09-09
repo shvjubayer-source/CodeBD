@@ -25,7 +25,7 @@ async function getProfile(req, res){
     catch(err){
 
         console.error(err);
-        res.staus(500).json({
+        res.status(500).json({
             message:"Internal Server Error"
         });
 
