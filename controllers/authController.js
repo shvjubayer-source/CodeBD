@@ -92,7 +92,8 @@ async function login(req, res) {
         const token=jwt.sign(
             {
                 userId:user.user_id,
-                username:user.username
+                username:user.username,
+                role: user.role
             },
             process.env.JWT_SECRET,
             {
@@ -117,7 +118,15 @@ async function login(req, res) {
 
 
 
+function logout(req, res) {
+    // JWT is stateless; client should remove token.
+    // If you later add cookies/sessions, clear them here.
+    return res.status(200).json({ message: "Logged out successfully" });
+}
+
+
 module.exports={
     register,
-    login
+    login,
+    logout
 }

@@ -8,9 +8,8 @@ async function  getUserSubmissions(req, res) {
         res.json(userSubmissions);
 
     } catch (error) {
-        console.error(err);
-        console.log("inside submission controller");
-        res.staus(500).json({
+        console.error(error);
+        res.status(500).json({
             message:"Internal Server Error"
         });
     }

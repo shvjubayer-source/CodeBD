@@ -19,6 +19,9 @@ if (!token) {
     window.location.href = "/auth/login";
 }
 
+// Show Admin Panel link only for admins
+showAdminNavLink();
+
 
 /* =========================
 LOAD SUBMISSIONS

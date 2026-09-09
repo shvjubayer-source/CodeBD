@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users — Admin — CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <header>
+        <a href="/home" class="logo">CodeBD</a>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/problems">Problems</a>
+            <a href="/admin" class="active">Admin</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <p class="sidebar-title">Overview</p>
+            <a href="/admin" class="sidebar-link"><span>🏠</span> Dashboard</a>
+            <p class="sidebar-title" style="margin-top:20px">Manage</p>
+            <a href="/admin/problems" class="sidebar-link"><span>📋</span> Problems</a>
+            <a href="/admin/contests" class="sidebar-link"><span>🏆</span> Contests</a>
+            <a href="/admin/users" class="sidebar-link active"><span>👥</span> Users</a>
+            <a href="/admin/submissions" class="sidebar-link"><span>📤</span> Submissions</a>
+            <a href="/admin/tags" class="sidebar-link"><span>🏷</span> Tags</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Users</h1>
+                    <p class="page-subtitle">View all users and manage their roles</p>
+                </div>
+                <div class="header-badge"><span class="badge-dot"></span> Admin</div>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+
+            <section class="card">
+                <div class="card-header">
+                    <h2>All Users</h2>
+                    <div class="table-controls">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by username or email...">
+                        <button class="btn-outline" id="refreshBtn">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Rating</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr><td colspan="7" class="loading-row"><div class="spinner"></div>Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="userCount" class="problem-count"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/js/adminUsers.js"></script>
+</body>
+</html>
