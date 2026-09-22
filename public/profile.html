@@ -32,9 +32,11 @@
 
         <a href="/problems">Problems</a>
 
+        <a href="/blogs">Community</a>
+
         <a href="/user/bookmarks">Bookmarks</a>
 
-        <a href="/user/profile" id="profile_link">Profile</a>
+        <a href="/user/profile" id="profile_link" style="text-decoration: underline;">Profile</a>
 
         <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
 
@@ -309,6 +311,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- ACCOUNT SECURITY & PASSWORD -->
+        <div class="profile-security" style="margin-top: 36px; padding-top: 28px; border-top: 1px solid #e2e8f0;">
+            <div class="analytics-title-group" style="margin-bottom: 20px;">
+                <div class="analytics-badge-row">
+                    <span class="user-pill"><span class="pulse-dot"></span> SECURITY & SETTINGS</span>
+                </div>
+                <h3>Change Password</h3>
+                <p class="activity-description">
+                    Ensure your CodeBD account is secured with a strong password.
+                </p>
+            </div>
+
+            <form id="changePasswordForm" style="max-width: 460px; display: flex; flex-direction: column; gap: 14px; background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div id="passwordAlert" class="hidden" style="padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 500;"></div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="currentPassword" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Current Password</label>
+                    <input type="password" id="currentPassword" required style="padding: 10px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; outline: none; font-size: 0.9rem;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="newPassword" style="font-size: 0.85rem; font-weight: 600; color: #334155;">New Password (min 6 characters)</label>
+                    <input type="password" id="newPassword" required minlength="6" style="padding: 10px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; outline: none; font-size: 0.9rem;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <label for="confirmPassword" style="font-size: 0.85rem; font-weight: 600; color: #334155;">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" required minlength="6" style="padding: 10px 12px; border-radius: 8px; border: 1.5px solid #cbd5e1; outline: none; font-size: 0.9rem;">
+                </div>
+
+                <button type="submit" id="updatePasswordBtn" style="margin-top: 6px; padding: 11px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.15s;">
+                    Update Password
+                </button>
+            </form>
         </div>
 
     </section>

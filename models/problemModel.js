@@ -165,6 +165,35 @@ async function deleteProblem(problemId) {
 }
 
 
+async function getProblemSolution(problemId) {
+    const result = await pool.query(
+        `SELECT solution_id, problem_id, content FROM solution WHERE problem_id = $1`,
+        [problemId]
+    );
+    return result.rows[0];
+}
+
+async function saveProblemSolution(problemId, content) {
+    const existing = await pool.query(
+        `SELECT solution_id FROM solution WHERE problem_id = $1`,
+        [problemId]
+    );
+    if (existing.rows.length > 0) {
+        const update = await pool.query(
+            `UPDATE solution SET content = $1 WHERE problem_id = $2 RETURNING *`,
+            [content, problemId]
+        );
+        return update.rows[0];
+    } else {
+        const insert = await pool.query(
+            `INSERT INTO solution (problem_id, content) VALUES ($1, $2) RETURNING *`,
+            [problemId, content]
+        );
+        return insert.rows[0];
+    }
+}
+
+
 module.exports = {
     getProblems,
     getProblemById,
@@ -172,5 +201,7 @@ module.exports = {
     getProblemForUser,
     addProblem,
     updateProblem,
-    deleteProblem
+    deleteProblem,
+    getProblemSolution,
+    saveProblemSolution
 };

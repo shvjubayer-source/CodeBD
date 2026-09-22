@@ -110,10 +110,48 @@ async function deleteProblem(req, res) {
 }
 
 
+async function getProblemSolution(req, res) {
+    try {
+        const problemId = req.params.id;
+        const solution = await Prob.getProblemSolution(problemId);
+
+        if (!solution) {
+            return res.status(404).json({ message: "Editorial not found for this problem" });
+        }
+
+        return res.status(200).json(solution);
+    } catch (err) {
+        console.error("getProblemSolution error:", err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+async function saveProblemSolution(req, res) {
+    try {
+        const problemId = req.params.id;
+        const { content } = req.body;
+
+        if (!content || !content.trim()) {
+            return res.status(400).json({ message: "Editorial content is required" });
+        }
+
+        const solution = await Prob.saveProblemSolution(problemId, content.trim());
+        return res.status(200).json({
+            message: "Editorial saved successfully",
+            solution
+        });
+    } catch (err) {
+        console.error("saveProblemSolution error:", err);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
 module.exports = {
     getProblems,
     getProblemById,
     createProblem,
     updateProblem,
-    deleteProblem
+    deleteProblem,
+    getProblemSolution,
+    saveProblemSolution
 };

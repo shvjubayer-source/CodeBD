@@ -161,6 +161,14 @@ async function getUserAnalytics(userId) {
     };
 }
 
+async function updatePassword(userId, hashedPassword) {
+    const result = await pool.query(
+        `UPDATE users SET password = $1 WHERE user_id = $2 RETURNING user_id, username, email`,
+        [hashedPassword, userId]
+    );
+    return result.rows[0];
+}
+
 module.exports={
     findUserByEmail,
     findById,
@@ -169,5 +177,6 @@ module.exports={
     createUser,
     getSolveCount,
     getSubmissions,
-    getUserAnalytics
+    getUserAnalytics,
+    updatePassword
 }

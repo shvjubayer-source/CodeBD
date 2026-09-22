@@ -12,6 +12,12 @@ router.get("/", authenticate, problemsController.getProblems);
 // Get single problem by ID (authenticated users)
 router.get("/:id", authenticate, problemsController.getProblemById);
 
+// Get problem solution / editorial (authenticated users)
+router.get("/:id/solution", authenticate, problemsController.getProblemSolution);
+
+// Save / update problem solution — admin only
+router.post("/:id/solution", authenticate, authorizeRole("admin"), problemsController.saveProblemSolution);
+
 
 // Create problem — admin only
 router.post(

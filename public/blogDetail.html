@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details | CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/blogDetail.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>CodeBD</h1>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/contest">Contest</a>
+            <a href="/problems">Problems</a>
+            <a href="/blogs" style="text-decoration: underline;">Community</a>
+            <a href="/user/bookmarks">Bookmarks</a>
+            <a href="/user/profile" id="profile_link">Profile</a>
+            <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a href="/blogs">← Community</a>
+            <span id="breadcrumbTitle">Loading post...</span>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="state-container">
+            <div class="spinner"></div>
+            <p>Loading post discussion...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="state-container hidden">
+            <p class="error-icon">⚠️</p>
+            <h2>Post Not Found</h2>
+            <p>This discussion post doesn't exist or has been removed.</p>
+            <a href="/blogs" class="btn-primary">Back to Community</a>
+        </div>
+
+        <!-- Post Content View -->
+        <article id="postContentArea" class="hidden">
+            <div class="post-card-full card">
+                <div class="post-header-full">
+                    <div class="author-meta">
+                        <div class="author-avatar" id="authorAvatar">U</div>
+                        <div>
+                            <div class="author-name-row">
+                                <span class="author-name" id="authorName">Author</span>
+                                <span class="role-badge hidden" id="authorRole">Admin</span>
+                            </div>
+                            <span class="post-id-tag" id="postIdTag">#1</span>
+                        </div>
+                    </div>
+                    <button type="button" id="deletePostBtn" class="btn-danger-outline hidden">Delete Post</button>
+                </div>
+
+                <h1 class="post-title" id="postTitle">Loading...</h1>
+
+                <div class="post-tags" id="postTags"></div>
+
+                <div class="post-body" id="postBody"></div>
+
+                <!-- Interaction Bar -->
+                <div class="interactions-bar">
+                    <div class="vote-group">
+                        <button type="button" class="btn-vote" id="likeBtn">
+                            <span class="vote-icon">👍</span>
+                            <span id="likesCount">0</span>
+                        </button>
+                        <button type="button" class="btn-vote" id="dislikeBtn">
+                            <span class="vote-icon">👎</span>
+                            <span id="dislikesCount">0</span>
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn-bookmark" id="bookmarkBtn" title="Bookmark post">
+                        <span id="bookmarkIcon">☆</span>
+                        <span id="bookmarkText">Bookmark</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <section class="comments-section card">
+                <h3 id="commentsHeader">Discussion (0)</h3>
+
+                <!-- Add Comment Form -->
+                <form id="commentForm" class="comment-form">
+                    <textarea id="commentText" rows="3" placeholder="Join the discussion... write a comment or ask a question." required></textarea>
+                    <div class="comment-actions">
+                        <button type="submit" id="submitCommentBtn" class="btn-primary">Post Comment</button>
+                    </div>
+                </form>
+
+                <!-- Comments List -->
+                <div class="comments-list" id="commentsList">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <p>© 2026 CodeBD — Solve. Learn. Improve.</p>
+    </footer>
+
+    <script src="/js/blogDetail.js"></script>
+</body>
+</html>

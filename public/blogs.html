@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community & Blogs | CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/blogs.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>CodeBD</h1>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/contest">Contest</a>
+            <a href="/problems">Problems</a>
+            <a href="/blogs" style="text-decoration: underline;">Community</a>
+            <a href="/user/bookmarks">Bookmarks</a>
+            <a href="/user/profile" id="profile_link">Profile</a>
+            <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+        <!-- Hero Banner -->
+        <section class="community-hero">
+            <div class="hero-left">
+                <h2>CodeBD Community</h2>
+                <p>Discuss competitive programming, algorithmic insights, and contest editorials with peers across Bangladesh.</p>
+            </div>
+            <button id="openCreateModalBtn" class="btn-primary-action">
+                <span>+</span> New Post
+            </button>
+        </section>
+
+        <!-- Filter & Search Bar -->
+        <div class="toolbar-card">
+            <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search posts by title or keyword..." autocomplete="off">
+            </div>
+            <div class="tabs-filter" id="tagsFilterContainer">
+                <button class="filter-chip active" data-tag="">All Posts</button>
+                <button class="filter-chip" data-tag="Dynamic Programming">Dynamic Programming</button>
+                <button class="filter-chip" data-tag="Arrays">Arrays</button>
+                <button class="filter-chip" data-tag="Graph">Graph</button>
+                <button class="filter-chip" data-tag="Algorithms">Algorithms</button>
+            </div>
+        </div>
+
+        <!-- Posts State -->
+        <div id="loadingState" class="state-container">
+            <div class="spinner"></div>
+            <p>Loading community discussions...</p>
+        </div>
+
+        <div id="emptyState" class="state-container hidden">
+            <p class="empty-icon">📝</p>
+            <h3>No posts found</h3>
+            <p>Be the first to share an insight or tutorial with the community!</p>
+        </div>
+
+        <!-- Posts List -->
+        <section class="posts-list" id="postsContainer">
+            <!-- Dynamically populated -->
+        </section>
+    </main>
+
+    <!-- Create Post Modal -->
+    <div id="createModal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Write Community Post</h3>
+                <button type="button" id="closeModalBtn" class="btn-close">&times;</button>
+            </div>
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label for="postTitle">Post Title</label>
+                    <input type="text" id="postTitle" placeholder="e.g. Solving Tree DP in O(N) using DFS" required maxlength="255">
+                </div>
+                <div class="form-group">
+                    <label for="postTags">Tags (Comma-separated)</label>
+                    <input type="text" id="postTags" placeholder="e.g. Dynamic Programming, Trees, Graph">
+                    <small class="form-hint">Existing tags will be linked automatically.</small>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Content (Markdown & Code supported)</label>
+                    <textarea id="postContent" rows="10" placeholder="Share your algorithms, approaches, insights, or code..." required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancelModalBtn" class="btn-secondary">Cancel</button>
+                    <button type="submit" id="submitPostBtn" class="btn-primary">Publish Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 CodeBD — Solve. Learn. Improve.</p>
+    </footer>
+
+    <script src="/js/blogs.js"></script>
+</body>
+</html>

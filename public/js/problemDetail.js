@@ -27,6 +27,18 @@ const memoryLimit    = document.getElementById("memoryLimit");
 const tagsRow        = document.getElementById("tagsRow");
 const statementBody  = document.getElementById("statementBody");
 
+// Tabs & Editorial Elements
+const tabStatementBtn       = document.getElementById("tabStatementBtn");
+const tabEditorialBtn       = document.getElementById("tabEditorialBtn");
+const statementSection      = document.getElementById("statementSection");
+const editorialSection      = document.getElementById("editorialSection");
+const editorialBody         = document.getElementById("editorialBody");
+const adminEditSolutionBtn  = document.getElementById("adminEditSolutionBtn");
+const adminSolutionEditForm = document.getElementById("adminSolutionEditForm");
+const adminSolutionTextarea = document.getElementById("adminSolutionTextarea");
+const saveSolutionBtn       = document.getElementById("saveSolutionBtn");
+const cancelSolutionBtn     = document.getElementById("cancelSolutionBtn");
+
 const submitForm     = document.getElementById("submitForm");
 const languageSelect = document.getElementById("languageSelect");
 const codeTextarea   = document.getElementById("codeTextarea");
@@ -131,6 +143,131 @@ function renderProblem(problem) {
     // Show content
     loadingState.style.display = "none";
     problemContent.classList.remove("hidden");
+}
+
+
+// ── Tab Switching ─────────────────────────────────────────────────────────────
+tabStatementBtn.addEventListener("click", () => {
+    tabStatementBtn.classList.add("active");
+    tabEditorialBtn.classList.remove("active");
+    statementSection.classList.remove("hidden");
+    editorialSection.classList.add("hidden");
+});
+
+tabEditorialBtn.addEventListener("click", () => {
+    tabEditorialBtn.classList.add("active");
+    tabStatementBtn.classList.remove("active");
+    editorialSection.classList.remove("hidden");
+    statementSection.classList.add("hidden");
+    loadEditorial();
+});
+
+let currentEditorial = null;
+
+async function loadEditorial() {
+    editorialBody.innerHTML = '<p style="color:#64748b;">Loading official editorial...</p>';
+    try {
+        const res = await fetch(`${PROBLEMS_API}/${problemId}/solution`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.status === 404) {
+            currentEditorial = null;
+            editorialBody.innerHTML = '<p style="color:#64748b;font-style:italic;">No official editorial has been published for this problem yet.</p>';
+            if (typeof isAdmin === "function" && isAdmin()) {
+                adminEditSolutionBtn.classList.remove("hidden");
+                adminEditSolutionBtn.textContent = "+ Add Editorial";
+            }
+            return;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        currentEditorial = data.content;
+        renderEditorial(data.content);
+        if (typeof isAdmin === "function" && isAdmin()) {
+            adminEditSolutionBtn.classList.remove("hidden");
+            adminEditSolutionBtn.textContent = "Edit Editorial";
+        }
+    } catch (err) {
+        console.error("Error loading editorial:", err);
+        editorialBody.innerHTML = '<p style="color:#dc2626;">Could not load editorial at this time.</p>';
+    }
+}
+
+function renderEditorial(rawText) {
+    if (!rawText) {
+        editorialBody.innerHTML = '<p style="color:#64748b;">No editorial content.</p>';
+        return;
+    }
+    const parts = rawText.split(/(```[\s\S]*?```)/g);
+    let html = "";
+    for (const part of parts) {
+        if (part.startsWith("```") && part.endsWith("```")) {
+            const firstLineBreak = part.indexOf("\n");
+            let code = "";
+            if (firstLineBreak !== -1) {
+                code = part.substring(firstLineBreak + 1, part.length - 3);
+            } else {
+                code = part.substring(3, part.length - 3);
+            }
+            html += `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+        } else {
+            let formatted = escapeHtml(part)
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/\n\n+/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+            html += `<div>${formatted}</div>`;
+        }
+    }
+    editorialBody.innerHTML = html;
+}
+
+if (adminEditSolutionBtn) {
+    adminEditSolutionBtn.addEventListener("click", () => {
+        adminSolutionTextarea.value = currentEditorial || "";
+        adminSolutionEditForm.classList.remove("hidden");
+        adminEditSolutionBtn.classList.add("hidden");
+    });
+}
+
+if (cancelSolutionBtn) {
+    cancelSolutionBtn.addEventListener("click", () => {
+        adminSolutionEditForm.classList.add("hidden");
+        adminEditSolutionBtn.classList.remove("hidden");
+    });
+}
+
+if (saveSolutionBtn) {
+    saveSolutionBtn.addEventListener("click", async () => {
+        const content = adminSolutionTextarea.value.trim();
+        if (!content) {
+            alert("Editorial content cannot be empty.");
+            return;
+        }
+        saveSolutionBtn.disabled = true;
+        saveSolutionBtn.textContent = "Saving...";
+        try {
+            const res = await fetch(`${PROBLEMS_API}/${problemId}/solution`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ content })
+            });
+            if (!res.ok) throw new Error("Failed to save editorial");
+            currentEditorial = content;
+            renderEditorial(content);
+            adminSolutionEditForm.classList.add("hidden");
+            adminEditSolutionBtn.classList.remove("hidden");
+            adminEditSolutionBtn.textContent = "Edit Editorial";
+        } catch (err) {
+            alert("Error saving editorial: " + err.message);
+        } finally {
+            saveSolutionBtn.disabled = false;
+            saveSolutionBtn.textContent = "Save Editorial";
+        }
+    });
 }
 
 

@@ -92,6 +92,76 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 2. Fetch & Render User Performance Analytics
         loadUserAnalytics(token);
 
+        // 3. Change Password Form
+        const changePasswordForm = document.getElementById("changePasswordForm");
+        const currentPasswordInput = document.getElementById("currentPassword");
+        const newPasswordInput = document.getElementById("newPassword");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const updatePasswordBtn = document.getElementById("updatePasswordBtn");
+        const passwordAlert = document.getElementById("passwordAlert");
+
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                passwordAlert.className = "hidden";
+                passwordAlert.textContent = "";
+
+                const currentPassword = currentPasswordInput.value;
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (newPassword !== confirmPassword) {
+                    passwordAlert.textContent = "New password and confirmation do not match.";
+                    passwordAlert.style.background = "#fee2e2";
+                    passwordAlert.style.color = "#dc2626";
+                    passwordAlert.classList.remove("hidden");
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    passwordAlert.textContent = "New password must be at least 6 characters.";
+                    passwordAlert.style.background = "#fee2e2";
+                    passwordAlert.style.color = "#dc2626";
+                    passwordAlert.classList.remove("hidden");
+                    return;
+                }
+
+                updatePasswordBtn.disabled = true;
+                updatePasswordBtn.textContent = "Updating...";
+
+                try {
+                    const pRes = await fetch("/api/user/password", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ currentPassword, newPassword })
+                    });
+
+                    const pData = await pRes.json();
+
+                    if (!pRes.ok) {
+                        throw new Error(pData.message || "Failed to update password");
+                    }
+
+                    passwordAlert.textContent = "Password updated successfully!";
+                    passwordAlert.style.background = "#dcfce7";
+                    passwordAlert.style.color = "#15803d";
+                    passwordAlert.classList.remove("hidden");
+                    changePasswordForm.reset();
+                } catch (pErr) {
+                    passwordAlert.textContent = pErr.message;
+                    passwordAlert.style.background = "#fee2e2";
+                    passwordAlert.style.color = "#dc2626";
+                    passwordAlert.classList.remove("hidden");
+                } finally {
+                    updatePasswordBtn.disabled = false;
+                    updatePasswordBtn.textContent = "Update Password";
+                }
+            });
+        }
+
     } catch (error) {
         console.error("Profile error:", error);
         username.textContent = "Unable to load";

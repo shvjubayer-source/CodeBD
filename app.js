@@ -15,6 +15,7 @@ const bookmarksRoutes   = require("./routes/bookmarksRoutes");
 const submissionRoutes  = require("./routes/submissionsRoutes");
 const adminRoutes       = require("./routes/adminRoutes");
 const contestRoutes     = require("./routes/contestRoutes");
+const blogRoutes        = require("./routes/blogRoutes");
 
 app.use("/api/auth",        authRoutes);
 app.use("/api/user",        userRoutes);
@@ -23,6 +24,7 @@ app.use("/api/bookmarks",   bookmarksRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/admin",       adminRoutes);
 app.use("/api/contests",    contestRoutes);
+app.use("/api/blogs",       blogRoutes);
 
 
 // ── Admin Pages ───────────────────────────────────────────────────────────────
@@ -123,6 +125,19 @@ app.get("/problems/:id", (req, res) => {
 
 app.get("/submissions", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "submissions.html"));
+});
+
+// Community / Blog Pages
+app.get("/blogs", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "blogs.html"));
+});
+
+app.get("/community", (req, res) => {
+    res.redirect("/blogs");
+});
+
+app.get("/blogs/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "blogDetail.html"));
 });
 
 
