@@ -229,11 +229,56 @@ submitForm.addEventListener("submit", async (e) => {
         const data = await res.json();
 
         if (res.ok) {
-            showSubmitMessage(
-                `✓ Submission received! Status: ${data.submission.verdict || "Pending"}. <a href="/submissions">View all submissions →</a>`,
-                "success"
-            );
-            codeTextarea.value = "";
+            const sub = data.submission || {};
+            const evalRes = data.evalResult || {};
+            const verdict = sub.verdict || "Pending";
+
+            if (verdict === "Accepted") {
+                verdictBadge.textContent = "Accepted";
+                verdictBadge.className = "verdict-badge accepted";
+                verdictBadge.classList.remove("hidden");
+                showSubmitMessage(
+                    `🎉 <strong>Accepted!</strong> All test cases passed in ${sub.execution_time != null ? sub.execution_time + " ms" : ""}. <a href="/submissions">View all submissions →</a>`,
+                    "success"
+                );
+            } else if (verdict === "Wrong Answer") {
+                verdictBadge.textContent = "Wrong Answer";
+                verdictBadge.className = "verdict-badge wrong";
+                verdictBadge.classList.remove("hidden");
+                showSubmitMessage(
+                    `❌ <strong>Wrong Answer</strong>${evalRes.failedTestcase ? ` on test case #${evalRes.failedTestcase}` : ""}. <a href="/submissions">View all submissions →</a>`,
+                    "error"
+                );
+            } else if (verdict === "Time Limit Exceeded") {
+                verdictBadge.textContent = "Time Limit Exceeded";
+                verdictBadge.className = "verdict-badge wrong";
+                verdictBadge.classList.remove("hidden");
+                showSubmitMessage(
+                    `⏱ <strong>Time Limit Exceeded</strong>. Your solution exceeded the allowed time limit. <a href="/submissions">View all submissions →</a>`,
+                    "warning"
+                );
+            } else if (verdict === "Runtime Error") {
+                verdictBadge.textContent = "Runtime Error";
+                verdictBadge.className = "verdict-badge wrong";
+                verdictBadge.classList.remove("hidden");
+                showSubmitMessage(
+                    `⚠️ <strong>Runtime Error</strong>${evalRes.failedTestcase ? ` on test case #${evalRes.failedTestcase}` : ""}${evalRes.error ? `<pre style="margin-top:8px;font-size:0.8rem;white-space:pre-wrap;background:#1e1b4b;color:#f8fafc;padding:8px;border-radius:6px;overflow-x:auto">${escapeHtml(evalRes.error)}</pre>` : ""}. <a href="/submissions">View all submissions →</a>`,
+                    "error"
+                );
+            } else if (verdict === "Compilation Error") {
+                verdictBadge.textContent = "Compilation Error";
+                verdictBadge.className = "verdict-badge wrong";
+                verdictBadge.classList.remove("hidden");
+                showSubmitMessage(
+                    `⚠️ <strong>Compilation Error</strong>:<pre style="margin-top:8px;font-size:0.8rem;white-space:pre-wrap;background:#1e1b4b;color:#f8fafc;padding:8px;border-radius:6px;overflow-x:auto">${escapeHtml(evalRes.error || "Failed to compile")}</pre><a href="/submissions">View all submissions →</a>`,
+                    "error"
+                );
+            } else {
+                showSubmitMessage(
+                    `Status: <strong>${verdict}</strong>. <a href="/submissions">View all submissions →</a>`,
+                    "info"
+                );
+            }
         } else {
             showSubmitMessage(data.message || "Submission failed. Please try again.", "error");
         }
@@ -245,6 +290,14 @@ submitForm.addEventListener("submit", async (e) => {
         submitBtnText.textContent = "Submit Solution";
     }
 });
+
+function escapeHtml(str) {
+    return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
 
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

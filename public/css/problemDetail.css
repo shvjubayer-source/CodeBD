@@ -455,6 +455,12 @@ nav button:hover { background: rgba(255, 255, 255, 0.25); }
     border: 1px solid #fecaca;
 }
 
+.submit-message.warning {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
 /* Form Actions */
 .form-actions {
     display: flex;

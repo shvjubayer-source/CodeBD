@@ -34,7 +34,51 @@ async function getUserSubmissions(userId) {
     return result.rows;
 }
 
+async function getProblemTestCases(problemId) {
+    const result = await pool.query(
+        `
+        SELECT input, expected_output
+        FROM testcase
+        WHERE problem_id = $1
+        ORDER BY test_id ASC
+        `,
+        [problemId]
+    );
+    return result.rows;
+}
+
+async function getProblemConstraints(problemId) {
+    const result = await pool.query(
+        `
+        SELECT time_limit, memory_limit
+        FROM problems
+        WHERE problem_id = $1
+        `,
+        [problemId]
+    );
+    return result.rows[0];
+}
+
+async function updateSubmissionResult(submissionId, verdict, executionTimeMs, memoryUsedKb = null) {
+    const result = await pool.query(
+        `
+        UPDATE submissions
+        SET
+            verdict = $1,
+            execution_time = $2,
+            memory_used = $3
+        WHERE submission_id = $4
+        RETURNING *
+        `,
+        [verdict, executionTimeMs, memoryUsedKb, submissionId]
+    );
+    return result.rows[0];
+}
+
 module.exports = {
     createSubmission,
-    getUserSubmissions
+    getUserSubmissions,
+    getProblemTestCases,
+    getProblemConstraints,
+    updateSubmissionResult
 };

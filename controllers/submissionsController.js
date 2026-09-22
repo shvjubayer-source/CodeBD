@@ -1,4 +1,5 @@
 const submissionsModel = require("../models/submissionsModel");
+const judgeService = require("../services/judgeService");
 
 async function getUserSubmissions(req, res) {
     try {
@@ -21,19 +22,45 @@ async function createSubmission(req, res) {
             });
         }
 
-        const submission = await submissionsModel.createSubmission(
+        // 1. Initial submission record (Pending)
+        const initialSubmission = await submissionsModel.createSubmission(
             userId,
             problem_id,
             language,
             code
         );
 
+        // 2. Fetch testcases & problem constraints
+        const [testcases, constraints] = await Promise.all([
+            submissionsModel.getProblemTestCases(problem_id),
+            submissionsModel.getProblemConstraints(problem_id)
+        ]);
+
+        const timeLimit = constraints ? Number(constraints.time_limit) : 2;
+
+        // 3. Automated code evaluation
+        const evalResult = await judgeService.evaluateSubmission(
+            language,
+            code,
+            testcases,
+            timeLimit
+        );
+
+        // 4. Update submission record with verdict and execution time
+        const updatedSubmission = await submissionsModel.updateSubmissionResult(
+            initialSubmission.submission_id,
+            evalResult.verdict,
+            evalResult.executionTime
+        );
+
         return res.status(201).json({
-            message: "Submission received",
-            submission
+            message: `Submission evaluated: ${evalResult.verdict}`,
+            submission: updatedSubmission,
+            evalResult
         });
+
     } catch (error) {
-        console.error("Error creating submission:", error);
+        console.error("Error creating/evaluating submission:", error);
 
         // Foreign key violation — problem doesn't exist
         if (error.code === "23503") {
