@@ -92,13 +92,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 2. Fetch & Render User Performance Analytics
         loadUserAnalytics(token);
 
-        // 3. Change Password Form
+        // 3. Change Password Modal & Form
+        const passwordModal = document.getElementById("passwordModal");
+        const openPasswordModalBtn = document.getElementById("openPasswordModalBtn");
+        const openPasswordModalCard = document.getElementById("openPasswordModalCard");
+        const closePasswordModalBtn = document.getElementById("closePasswordModalBtn");
+        const cancelPasswordModalBtn = document.getElementById("cancelPasswordModalBtn");
+
         const changePasswordForm = document.getElementById("changePasswordForm");
         const currentPasswordInput = document.getElementById("currentPassword");
         const newPasswordInput = document.getElementById("newPassword");
         const confirmPasswordInput = document.getElementById("confirmPassword");
         const updatePasswordBtn = document.getElementById("updatePasswordBtn");
         const passwordAlert = document.getElementById("passwordAlert");
+
+        const openModal = () => {
+            if (!passwordModal) return;
+            passwordModal.classList.remove("hidden");
+            passwordAlert.className = "hidden";
+            passwordAlert.textContent = "";
+            changePasswordForm.reset();
+            currentPasswordInput.focus();
+        };
+
+        const closeModal = () => {
+            if (!passwordModal) return;
+            passwordModal.classList.add("hidden");
+            changePasswordForm.reset();
+        };
+
+        if (openPasswordModalBtn) openPasswordModalBtn.addEventListener("click", openModal);
+        if (openPasswordModalCard) openPasswordModalCard.addEventListener("click", openModal);
+        if (closePasswordModalBtn) closePasswordModalBtn.addEventListener("click", closeModal);
+        if (cancelPasswordModalBtn) cancelPasswordModalBtn.addEventListener("click", closeModal);
+        if (passwordModal) {
+            passwordModal.addEventListener("click", (e) => {
+                if (e.target === passwordModal) closeModal();
+            });
+        }
 
         if (changePasswordForm) {
             changePasswordForm.addEventListener("submit", async (e) => {
@@ -150,6 +181,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     passwordAlert.style.color = "#15803d";
                     passwordAlert.classList.remove("hidden");
                     changePasswordForm.reset();
+
+                    setTimeout(() => {
+                        closeModal();
+                    }, 1500);
                 } catch (pErr) {
                     passwordAlert.textContent = pErr.message;
                     passwordAlert.style.background = "#fee2e2";
