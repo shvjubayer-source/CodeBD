@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View problem details, constraints, and submit your solution on CodeBD.">
+    <title>Problem | CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/problemDetail.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>CodeBD</h1>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/contest">Contest</a>
+            <a href="/problems" style="text-decoration:underline;">Problems</a>
+            <a href="/user/bookmarks">Bookmarks</a>
+            <a href="/user/profile" id="profile_link">Profile</a>
+            <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/problems">← Problems</a>
+            <span id="breadcrumbTitle">Loading...</span>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading problem...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state hidden">
+            <p class="error-icon">⚠️</p>
+            <h2>Problem Not Found</h2>
+            <p>This problem doesn't exist or you don't have access.</p>
+            <a href="/problems" class="btn-back">Back to Problems</a>
+        </div>
+
+        <!-- Problem Content -->
+        <div id="problemContent" class="hidden">
+
+            <!-- Problem Header -->
+            <section class="problem-header">
+                <div class="problem-title-row">
+                    <div>
+                        <div class="problem-meta-top">
+                            <span class="problem-number" id="problemNumber">#1</span>
+                            <span class="difficulty-badge" id="difficultyBadge">Easy</span>
+                            <span class="verdict-badge hidden" id="verdictBadge"></span>
+                        </div>
+                        <h2 id="problemTitle">Problem Title</h2>
+                    </div>
+                    <button class="bookmark-btn" id="bookmarkBtn" title="Bookmark this problem">
+                        <span id="bookmarkIcon">☆</span>
+                        <span id="bookmarkText">Save</span>
+                    </button>
+                </div>
+
+                <div class="constraints-row">
+                    <div class="constraint-item">
+                        <span class="constraint-label">⏱ Time Limit</span>
+                        <span class="constraint-value" id="timeLimit">—</span>
+                    </div>
+                    <div class="constraint-item">
+                        <span class="constraint-label">💾 Memory Limit</span>
+                        <span class="constraint-value" id="memoryLimit">—</span>
+                    </div>
+                </div>
+
+                <div class="tags-row" id="tagsRow"></div>
+            </section>
+
+
+            <!-- Problem Statement -->
+            <section class="problem-statement card">
+                <h3>Problem Statement</h3>
+                <div class="statement-body" id="statementBody">
+                    <!-- rendered from API -->
+                </div>
+            </section>
+
+
+            <!-- Submit Solution -->
+            <section class="submit-section card" id="submitSection">
+                <div class="submit-header">
+                    <h3>Submit Solution</h3>
+                    <p>Write or paste your code and submit for evaluation.</p>
+                </div>
+
+                <form id="submitForm">
+                    <div class="form-row">
+                        <label for="languageSelect">Language</label>
+                        <select id="languageSelect" name="language" required>
+                            <option value="">Select language...</option>
+                            <option value="C++17">C++17</option>
+                            <option value="C++14">C++14</option>
+                            <option value="C">C</option>
+                            <option value="Java">Java</option>
+                            <option value="Python3">Python 3</option>
+                            <option value="Python2">Python 2</option>
+                            <option value="JavaScript">JavaScript (Node.js)</option>
+                            <option value="Go">Go</option>
+                            <option value="Rust">Rust</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="codeTextarea">Source Code</label>
+                        <div class="code-editor-wrapper">
+                            <div class="editor-toolbar">
+                                <span id="langLabel" class="editor-lang">No language selected</span>
+                                <button type="button" class="btn-clear-code" id="clearCodeBtn">Clear</button>
+                            </div>
+                            <textarea
+                                id="codeTextarea"
+                                name="code"
+                                placeholder="// Write your solution here..."
+                                rows="18"
+                                spellcheck="false"
+                                required
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div id="submitMessage" class="submit-message hidden"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submitBtn" class="btn-submit">
+                            <span id="submitBtnText">Submit Solution</span>
+                        </button>
+                        <a href="/submissions" class="btn-history">View My Submissions</a>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 CodeBD — Solve. Learn. Improve.</p>
+    </footer>
+
+    <script src="/js/problemDetail.js"></script>
+
+</body>
+</html>

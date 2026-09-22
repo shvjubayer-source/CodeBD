@@ -1,0 +1,527 @@
+/* =========================
+   RESET & BASE
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: linear-gradient(to right, #4f46e5, #3730a3);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    box-shadow: 0 4px 12px rgba(55, 48, 163, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+nav a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+nav a:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+nav button {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+nav button:hover { background: rgba(255, 255, 255, 0.25); }
+
+/* =========================
+   PAGE SHELL
+========================= */
+
+.page-shell {
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    flex: 1;
+}
+
+/* =========================
+   BREADCRUMB
+========================= */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.breadcrumb a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover { color: #3730a3; }
+
+/* =========================
+   LOADING / ERROR STATES
+========================= */
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 80px 20px;
+    color: #94a3b8;
+}
+
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.error-icon { font-size: 3rem; margin-bottom: 12px; }
+
+.error-state h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.error-state p {
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+.btn-back {
+    background: #4f46e5;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-back:hover { background: #3730a3; }
+
+.hidden { display: none !important; }
+
+/* =========================
+   PROBLEM HEADER
+========================= */
+
+.problem-header {
+    margin-bottom: 24px;
+}
+
+.problem-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.problem-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.problem-number {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.difficulty-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.difficulty-badge.easy   { background: #dcfce7; color: #15803d; }
+.difficulty-badge.medium { background: #fef9c3; color: #a16207; }
+.difficulty-badge.hard   { background: #fee2e2; color: #b91c1c; }
+
+.verdict-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.verdict-badge.accepted   { background: #dcfce7; color: #15803d; }
+.verdict-badge.wrong      { background: #fee2e2; color: #b91c1c; }
+.verdict-badge.pending    { background: #f1f5f9; color: #64748b; }
+
+.problem-header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+}
+
+/* Bookmark Button */
+.bookmark-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    min-width: 72px;
+}
+
+.bookmark-btn:hover {
+    border-color: #a5b4fc;
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+.bookmark-btn.bookmarked {
+    background: #eef2ff;
+    border-color: #6366f1;
+    color: #4f46e5;
+}
+
+#bookmarkIcon { font-size: 1.3rem; line-height: 1; }
+
+/* Constraints */
+.constraints-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.constraint-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.constraint-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.constraint-value {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+/* Tags */
+.tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag-chip {
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #c7d2fe;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* =========================
+   PROBLEM STATEMENT
+========================= */
+
+.statement-body {
+    font-size: 0.95rem;
+    color: #334155;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* =========================
+   SUBMIT SECTION
+========================= */
+
+.submit-header { margin-bottom: 20px; }
+
+.submit-header p {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.form-row label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-row select {
+    padding: 10px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: #fff;
+    max-width: 280px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.form-row select:focus { border-color: #6366f1; }
+
+/* Code Editor */
+.code-editor-wrapper {
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.code-editor-wrapper:focus-within { border-color: #6366f1; }
+
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e293b;
+    padding: 8px 14px;
+}
+
+.editor-lang {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #94a3b8;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.btn-clear-code {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.btn-clear-code:hover { color: #f87171; border-color: #f87171; }
+
+#codeTextarea {
+    width: 100%;
+    background: #0f172a;
+    color: #e2e8f0;
+    border: none;
+    padding: 16px;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 300px;
+    outline: none;
+    tab-size: 4;
+}
+
+#codeTextarea::placeholder { color: #475569; }
+
+/* Submit Message */
+.submit-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.submit-message.success {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.submit-message.error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+}
+
+.btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-history {
+    color: #6366f1;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.btn-history:hover { background: #eef2ff; }
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #1e293b;
+    color: #94a3b8;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+    header { padding: 12px 16px; }
+    .page-shell { padding: 20px 16px 60px; }
+    .problem-title-row { flex-direction: column; }
+    .form-row select { max-width: 100%; }
+    .form-actions { flex-direction: column; align-items: stretch; }
+    .btn-submit { text-align: center; }
+}

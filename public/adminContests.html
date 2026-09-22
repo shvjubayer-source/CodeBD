@@ -27,6 +27,9 @@
             <a href="/admin" class="sidebar-link">
                 <span>🏠</span> Dashboard
             </a>
+            <a href="/admin#analyticsSection" class="sidebar-link">
+                <span>📊</span> Analytics
+            </a>
             <p class="sidebar-title" style="margin-top:20px">Manage</p>
             <a href="/admin/problems" class="sidebar-link">
                 <span>📋</span> Problems
@@ -60,7 +63,7 @@
             <section class="card">
                 <div class="card-header">
                     <h2>Create New Contest</h2>
-                    <button class="btn-ghost" id="toggleCreateBtn">Hide</button>
+                    <button class="btn-ghost" id="toggleCreateBtn">Show</button>
                 </div>
                 <form id="createContestForm" class="problem-form">
                     <div class="form-row">
@@ -71,6 +74,12 @@
                         <div class="form-group">
                             <label for="contestStartTime">Start Time</label>
                             <input type="datetime-local" id="contestStartTime" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contestEndTime">End Time <span style="color:#64748b;font-weight:400">(optional)</span></label>
+                            <input type="datetime-local" id="contestEndTime">
                         </div>
                     </div>
                     <div class="form-group">
@@ -98,11 +107,46 @@
                                 <th>Title</th>
                                 <th>Description</th>
                                 <th>Start Time</th>
+                                <th>Registered Users</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="contestTableBody">
-                            <tr><td colspan="5" class="loading-row"><div class="spinner"></div>Loading...</td></tr>
+                            <tr><td colspan="6" class="loading-row"><div class="spinner"></div>Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CONTEST REGISTRATIONS / PARTICIPANTS TABLE -->
+            <section class="card" id="registrationsSection" style="margin-top: 28px;">
+                <div class="card-header">
+                    <div>
+                        <h2>Contest Registrations & Participants</h2>
+                        <p class="page-subtitle" style="margin-top:4px">View which users have registered for each contest</p>
+                    </div>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <label for="filterContestSelect" style="font-size:0.85rem;color:#94a3b8;font-weight:600;">Filter Contest:</label>
+                        <select id="filterContestSelect" style="background:#1e293b;border:1px solid #334155;color:#f8fafc;padding:6px 12px;border-radius:6px;font-size:0.85rem;">
+                            <option value="">All Contests</option>
+                        </select>
+                        <button class="btn-outline" id="refreshRegBtn">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contest</th>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Rating</th>
+                                <th>Registered At</th>
+                                <th>Solves / Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="registrationsTableBody">
+                            <tr><td colspan="6" class="loading-row"><div class="spinner"></div>Loading registrations...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -127,6 +171,12 @@
                     <div class="form-group">
                         <label for="editContestStartTime">Start Time</label>
                         <input type="datetime-local" id="editContestStartTime" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editContestEndTime">End Time <span style="color:#64748b;font-weight:400">(optional)</span></label>
+                        <input type="datetime-local" id="editContestEndTime">
                     </div>
                 </div>
                 <div class="form-group">

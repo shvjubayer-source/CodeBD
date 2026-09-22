@@ -8,6 +8,8 @@ async function testGetProblems() {
         console.log(problems);
     } catch (error) {
         console.error("Test failed:", error);
+    } finally {
+        process.exit(0);
     }
 }
 

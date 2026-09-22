@@ -185,9 +185,9 @@ function renderProblems(problems) {
                 </span>
             </td>
 
-            <td>${problem.time_limit ?? "—"}</td>
+            <td>${problem.time_limit != null ? problem.time_limit + "s" : "—"}</td>
 
-            <td>${problem.memory_limit ?? "—"}</td>
+            <td>${problem.memory_limit != null ? problem.memory_limit + " MB" : "—"}</td>
 
             <td>
                 <button

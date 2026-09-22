@@ -9,6 +9,7 @@ const authenticate=require("../middlewares/authMiddleware");
 
 
 router.get("/profile", authenticate, userController.getProfile);
+router.get("/analytics", authenticate, userController.getUserAnalytics);
 
 
 

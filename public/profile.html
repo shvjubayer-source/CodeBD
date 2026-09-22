@@ -11,6 +11,7 @@
 <title>Profile - CodeBD</title>
 
 <link rel="stylesheet" href="/css/profile.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/auth-utils.js"></script>
 
 
@@ -188,7 +189,7 @@
                 </a>
 
 
-                <a href="/user/contests" class="activity-card">
+                <a href="/contest" class="activity-card">
 
                     <div class="activity-card-icon">
                         🏆
@@ -199,7 +200,7 @@
                         <h4>Contests</h4>
 
                         <p>
-                            View contests you have participated in.
+                            Browse and participate in programming contests.
                         </p>
 
                     </div>
@@ -210,6 +211,104 @@
 
             </div>
 
+        </div>
+
+        <!-- PROFILE PERFORMANCE & ANALYTICS -->
+        <div class="profile-analytics">
+            <div class="analytics-title-group">
+                <div class="analytics-badge-row">
+                    <span class="user-pill"><span class="pulse-dot"></span> PERFORMANCE TELEMETRY</span>
+                </div>
+                <h3>Skill & Rating Analytics</h3>
+                <p class="activity-description">
+                    Track your competitive rating trajectory, difficulty distribution, and verdict outcomes.
+                </p>
+            </div>
+
+            <!-- Profile KPI Mini Cards -->
+            <div class="profile-kpi-grid">
+                <div class="profile-kpi-card kpi-purple">
+                    <span class="profile-kpi-label">Current Rating</span>
+                    <span class="profile-kpi-val" id="userKpiRating">—</span>
+                    <span class="profile-kpi-sub" id="userKpiTier">Unrated</span>
+                </div>
+                <div class="profile-kpi-card kpi-blue">
+                    <span class="profile-kpi-label">Peak Rating</span>
+                    <span class="profile-kpi-val" id="userKpiPeak">—</span>
+                    <span class="profile-kpi-sub" id="userKpiContests">0 Contests</span>
+                </div>
+                <div class="profile-kpi-card kpi-emerald">
+                    <span class="profile-kpi-label">Problems Solved</span>
+                    <span class="profile-kpi-val" id="userKpiSolved">—</span>
+                    <span class="profile-kpi-sub" id="userKpiHard">0 Hard Solves</span>
+                </div>
+                <div class="profile-kpi-card kpi-amber">
+                    <span class="profile-kpi-label">Accuracy Rate</span>
+                    <span class="profile-kpi-val" id="userKpiAccuracy">—%</span>
+                    <span class="profile-kpi-sub" id="userKpiSubs">0 Submissions</span>
+                </div>
+            </div>
+
+            <!-- Profile Charts Grid -->
+            <div class="profile-charts-grid">
+                <!-- 1. Rating Progression Timeline (Full width) -->
+                <div class="profile-chart-card full-width">
+                    <div class="profile-chart-header">
+                        <div>
+                            <h4><span>📈</span> Rating Progression Trajectory</h4>
+                            <p>Rating evolution across participated contests</p>
+                        </div>
+                        <span class="profile-chart-badge" id="ratingProgressionBadge">Contest History</span>
+                    </div>
+                    <div class="profile-chart-canvas-wrap line-wrap" id="ratingChartContainer">
+                        <canvas id="userRatingChart"></canvas>
+                        <div class="chart-empty-state" id="ratingEmptyState" style="display: none;">
+                            <span class="empty-icon">🏆</span>
+                            <p>No contest rating history yet.</p>
+                            <small>Compete in scheduled contests to watch your rating climb!</small>
+                            <a href="/contest" class="empty-action-btn">Browse Contests →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Solved Problems by Difficulty -->
+                <div class="profile-chart-card">
+                    <div class="profile-chart-header">
+                        <div>
+                            <h4><span>🍩</span> Solves by Difficulty</h4>
+                            <p>Accepted unique problems solved by tier</p>
+                        </div>
+                    </div>
+                    <div class="profile-chart-canvas-wrap doughnut-wrap" id="difficultyChartContainer">
+                        <canvas id="userDifficultyChart"></canvas>
+                        <div class="chart-empty-state" id="difficultyEmptyState" style="display: none;">
+                            <span class="empty-icon">✓</span>
+                            <p>No solved problems yet.</p>
+                            <small>Start solving challenges from the problem bank!</small>
+                            <a href="/problems" class="empty-action-btn">Solve Problems →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Submissions Verdict Distribution -->
+                <div class="profile-chart-card">
+                    <div class="profile-chart-header">
+                        <div>
+                            <h4><span>🎯</span> Verdict Outcomes</h4>
+                            <p>All-time submission evaluation outcomes</p>
+                        </div>
+                    </div>
+                    <div class="profile-chart-canvas-wrap doughnut-wrap" id="verdictChartContainer">
+                        <canvas id="userVerdictChart"></canvas>
+                        <div class="chart-empty-state" id="verdictEmptyState" style="display: none;">
+                            <span class="empty-icon">&lt;/&gt;</span>
+                            <p>No submissions recorded yet.</p>
+                            <small>Submit code solutions to view evaluation telemetry.</small>
+                            <a href="/problems" class="empty-action-btn">Start Practicing →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </section>

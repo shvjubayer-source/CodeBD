@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="description" content="Login to your CodeBD account to solve problems, enter contests, and track your progress.">
     <title>Login - CodeBD</title>
-
     <link rel="stylesheet" href="/css/login.css">
 </head>
 
@@ -15,6 +14,8 @@
 
     <form id="loginForm">
 
+        <div id="loginError" class="form-error" style="display:none;"></div>
+
         <div>
             <label for="email">Email</label>
 
@@ -22,6 +23,7 @@
                 type="email"
                 id="email"
                 name="email"
+                placeholder="Enter your email"
                 required
             >
         </div>
@@ -34,12 +36,13 @@
                 type="password"
                 id="password"
                 name="password"
+                placeholder="Enter your password"
                 required
             >
         </div>
 
 
-        <button type="submit">
+        <button type="submit" id="loginBtn">
             Login
         </button>
 

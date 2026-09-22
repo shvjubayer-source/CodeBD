@@ -76,22 +76,22 @@ function toDatetimeLocal(iso) {
 // LOAD CONTESTS
 // ==========================================
 async function loadContests() {
-    tableBody.innerHTML = `<tr><td colspan="5" class="loading-row"><div class="spinner"></div>Loading...</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="6" class="loading-row"><div class="spinner"></div>Loading...</td></tr>`;
     try {
         const res = await fetch("/api/admin/contests", { headers: authHeaders() });
         if (handleUnauth(res.status)) return;
         const json = await res.json();
-        if (!res.ok) { tableBody.innerHTML = `<tr><td colspan="5" class="loading-row">${json.message||"Error"}</td></tr>`; return; }
+        if (!res.ok) { tableBody.innerHTML = `<tr><td colspan="6" class="loading-row">${json.message||"Error"}</td></tr>`; return; }
         allContests = json.data || json;
         renderContests(allContests);
     } catch(e) {
         console.error(e);
-        tableBody.innerHTML = `<tr><td colspan="5" class="loading-row">Network error</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" class="loading-row">Network error</td></tr>`;
     }
 }
 
 function renderContests(contests) {
-    if (!contests.length) { tableBody.innerHTML = `<tr><td colspan="5" class="loading-row">No contests found.</td></tr>`; return; }
+    if (!contests.length) { tableBody.innerHTML = `<tr><td colspan="6" class="loading-row">No contests found.</td></tr>`; return; }
     tableBody.innerHTML = contests.map(c => `
         <tr>
             <td style="color:#475569;font-weight:600">#${c.contest_id}</td>
@@ -99,12 +99,27 @@ function renderContests(contests) {
             <td style="color:#94a3b8;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(c.description||"—")}</td>
             <td>${formatDate(c.start_time)}</td>
             <td>
+                <button class="btn-outline view-reg-btn" data-id="${c.contest_id}" style="padding:4px 10px;font-size:0.8rem;">
+                    👥 ${c.participant_count || 0} Registered
+                </button>
+            </td>
+            <td>
                 <button class="edit-btn" data-id="${c.contest_id}">✏ Edit</button>
                 <button class="delete-btn" data-id="${c.contest_id}" data-title="${escapeHtml(c.title)}">🗑 Delete</button>
             </td>
         </tr>
     `).join("");
+
+    updateContestDropdown(contests);
     attachEvents();
+}
+
+function updateContestDropdown(contests) {
+    const select = document.getElementById("filterContestSelect");
+    if (!select) return;
+    const currentVal = select.value;
+    select.innerHTML = `<option value="">All Contests (${contests.length})</option>` +
+        contests.map(c => `<option value="${c.contest_id}" ${currentVal === String(c.contest_id) ? 'selected' : ''}>${escapeHtml(c.title)} (#${c.contest_id})</option>`).join("");
 }
 
 function attachEvents() {
@@ -121,6 +136,18 @@ function attachEvents() {
             deleteModal.classList.remove("hidden");
         });
     });
+    document.querySelectorAll(".view-reg-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const cid = btn.dataset.id;
+            const select = document.getElementById("filterContestSelect");
+            if (select) {
+                select.value = cid;
+                loadRegistrations(cid);
+                const regSection = document.getElementById("registrationsSection");
+                if (regSection) regSection.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    });
 }
 
 // ==========================================
@@ -133,6 +160,10 @@ toggleCreateBtn.addEventListener("click", () => {
     toggleCreateBtn.textContent = hidden ? "Hide" : "Show";
 });
 
+// Set the form as hidden on page load to match the "Show" initial button state
+createForm.style.display = "none";
+toggleCreateBtn.textContent = "Show";
+
 // ==========================================
 // CREATE
 // ==========================================
@@ -141,7 +172,8 @@ createForm.addEventListener("submit", async e => {
     const body = {
         title:      document.getElementById("contestTitle").value.trim(),
         description:document.getElementById("contestDescription").value.trim(),
-        start_time: document.getElementById("contestStartTime").value
+        start_time: document.getElementById("contestStartTime").value,
+        end_time:   document.getElementById("contestEndTime").value || null
     };
     createBtn.disabled = true; createBtn.textContent = "Creating...";
     try {
@@ -163,6 +195,7 @@ function openEditModal(c) {
     document.getElementById("editContestTitle").value       = c.title;
     document.getElementById("editContestDescription").value = c.description||"";
     document.getElementById("editContestStartTime").value   = toDatetimeLocal(c.start_time);
+    document.getElementById("editContestEndTime").value     = c.end_time ? toDatetimeLocal(c.end_time) : "";
     editModal.classList.remove("hidden");
 }
 function closeEditModal() { editModal.classList.add("hidden"); editForm.reset(); }
@@ -176,7 +209,8 @@ editForm.addEventListener("submit", async e => {
     const body = {
         title:      document.getElementById("editContestTitle").value.trim(),
         description:document.getElementById("editContestDescription").value.trim(),
-        start_time: document.getElementById("editContestStartTime").value
+        start_time: document.getElementById("editContestStartTime").value,
+        end_time:   document.getElementById("editContestEndTime").value || null
     };
     editBtn.disabled = true; editBtn.textContent = "Saving...";
     try {
@@ -210,5 +244,81 @@ confirmDelBtn.addEventListener("click", async () => {
     finally { confirmDelBtn.disabled=false; confirmDelBtn.textContent="Yes, Delete"; }
 });
 
-refreshBtn.addEventListener("click", loadContests);
+refreshBtn.addEventListener("click", () => {
+    loadContests();
+    loadRegistrations(filterSelect ? (filterSelect.value || null) : null);
+});
+
+// ==========================================
+// REGISTRATIONS & PARTICIPANTS
+// ==========================================
+const regTableBody  = document.getElementById("registrationsTableBody");
+const filterSelect  = document.getElementById("filterContestSelect");
+const refreshRegBtn = document.getElementById("refreshRegBtn");
+
+async function loadRegistrations(contestId = null) {
+    if (!regTableBody) return;
+    regTableBody.innerHTML = `<tr><td colspan="6" class="loading-row"><div class="spinner"></div>Loading registrations...</td></tr>`;
+    try {
+        const url = contestId 
+            ? `/api/admin/contests/registrations?contest_id=${contestId}`
+            : `/api/admin/contests/registrations`;
+        const res = await fetch(url, { headers: authHeaders() });
+        if (handleUnauth(res.status)) return;
+        const json = await res.json();
+        if (!res.ok) {
+            regTableBody.innerHTML = `<tr><td colspan="6" class="loading-row">${json.message || "Failed to load"}</td></tr>`;
+            return;
+        }
+        const data = json.data || [];
+        renderRegistrations(data);
+    } catch(e) {
+        console.error(e);
+        regTableBody.innerHTML = `<tr><td colspan="6" class="loading-row">Network error</td></tr>`;
+    }
+}
+
+function renderRegistrations(list) {
+    if (!list.length) {
+        regTableBody.innerHTML = `<tr><td colspan="6" class="loading-row">No user registrations found.</td></tr>`;
+        return;
+    }
+    regTableBody.innerHTML = list.map(r => `
+        <tr>
+            <td>
+                <span style="font-weight:700;color:#818cf8;">${escapeHtml(r.contest_title)}</span>
+                <span style="color:#64748b;font-size:0.75rem;margin-left:4px;">#${r.contest_id}</span>
+            </td>
+            <td>
+                <span style="font-weight:600;color:#e2e8f0;">${escapeHtml(r.username)}</span>
+            </td>
+            <td style="color:#94a3b8;">${escapeHtml(r.email)}</td>
+            <td>
+                <span style="background:#1e293b;border:1px solid #334155;padding:2px 8px;border-radius:4px;font-weight:600;color:#38bdf8;">
+                    ${r.rating || 0}
+                </span>
+            </td>
+            <td style="color:#94a3b8;font-size:0.85rem;">${formatDate(r.registered_at)}</td>
+            <td>
+                <span style="color:#10b981;font-weight:700;">${r.solve_count || 0} solved</span>
+                <span style="color:#64748b;font-size:0.8rem;">(${r.score || 0} pts)</span>
+            </td>
+        </tr>
+    `).join("");
+}
+
+if (filterSelect) {
+    filterSelect.addEventListener("change", () => {
+        loadRegistrations(filterSelect.value || null);
+    });
+}
+
+if (refreshRegBtn) {
+    refreshRegBtn.addEventListener("click", () => {
+        loadRegistrations(filterSelect ? (filterSelect.value || null) : null);
+    });
+}
+
 loadContests();
+loadRegistrations();
+

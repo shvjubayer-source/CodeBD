@@ -171,7 +171,7 @@ async function toggleBookmark(problem, button) {
     const token = getToken();
 
     if (!token) {
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         return;
     }
 
@@ -186,7 +186,7 @@ async function toggleBookmark(problem, button) {
 
         if (response.status === 401 || response.status === 403) {
             localStorage.removeItem(TOKEN_KEY);
-            window.location.href = "/login";
+            window.location.href = "/auth/login";
             return;
         }
 
@@ -208,7 +208,7 @@ async function loadProblems() {
     const token = getToken();
 
     if (!token) {
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         return;
     }
 
@@ -220,7 +220,7 @@ async function loadProblems() {
 
         if (response.status === 401 || response.status === 403) {
             localStorage.removeItem(TOKEN_KEY);
-            window.location.href = "/login";
+            window.location.href = "/auth/login";
             return;
         }
 
@@ -232,7 +232,6 @@ async function loadProblems() {
         }
 
         const data = await response.json();
-        console.log("Problems API response:", data);
 
         if (Array.isArray(data)) {
             allProblems = data;
@@ -263,5 +262,17 @@ clearButton.addEventListener("click", () => {
     });
     renderProblems(allProblems);
 });
+
+// Logout
+const logoutBtn = document.querySelector("#logoutBtn");
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem(TOKEN_KEY);
+        window.location.href = "/auth/login";
+    });
+}
+
+// Show admin nav link for admins
+showAdminNavLink();
 
 loadProblems();

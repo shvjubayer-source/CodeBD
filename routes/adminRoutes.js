@@ -5,8 +5,9 @@ const authenticate = require('../middlewares/authMiddleware');
 const authorizeRole = require('../middlewares/roleMiddleware');
 const adminController = require('../controllers/adminController');
 
-// Dashboard
+// Dashboard & Analytics
 router.get('/', authenticate, authorizeRole('admin'), adminController.getDashboardStats);
+router.get('/analytics', authenticate, authorizeRole('admin'), adminController.getAnalytics);
 
 // Users
 router.get('/users', authenticate, authorizeRole('admin'), adminController.getUsers);
@@ -17,6 +18,7 @@ router.get('/submissions', authenticate, authorizeRole('admin'), adminController
 
 // Contests
 router.get('/contests', authenticate, authorizeRole('admin'), adminController.getContests);
+router.get('/contests/registrations', authenticate, authorizeRole('admin'), adminController.getContestRegistrations);
 router.post('/contests', authenticate, authorizeRole('admin'), adminController.createContest);
 router.put('/contests/:id', authenticate, authorizeRole('admin'), adminController.updateContest);
 router.delete('/contests/:id', authenticate, authorizeRole('admin'), adminController.deleteContest);

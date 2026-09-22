@@ -1,8 +1,6 @@
 const pool = require("../config/db");
 
 async function getProblems(userId) {
-    console.log("Inside Problem Models");
-
     const result = await pool.query(
         `
         SELECT
@@ -10,6 +8,8 @@ async function getProblems(userId) {
             p.title,
             p.statement,
             p.difficulty,
+            p.time_limit,
+            p.memory_limit,
 
             (
                 SELECT STRING_AGG(
@@ -17,8 +17,7 @@ async function getProblems(userId) {
                     ', ' ORDER BY t.tag_name
                 )
                 FROM problem_tags pt
-                JOIN tags t
-                    ON pt.tag_id = t.tag_id
+                JOIN tags t ON pt.tag_id = t.tag_id
                 WHERE pt.problem_id = p.problem_id
             ) AS tags,
 
@@ -26,7 +25,7 @@ async function getProblems(userId) {
                 SELECT 1
                 FROM bookmarks b
                 WHERE b.problem_id = p.problem_id
-                AND b.user_id = $1
+                  AND b.user_id = $1
             ) AS is_bookmarked,
 
             CASE
@@ -34,23 +33,21 @@ async function getProblems(userId) {
                     SELECT 1
                     FROM submissions s
                     WHERE s.problem_id = p.problem_id
-                    AND s.user_id = $1
-                    AND s.verdict = 'Accepted'
+                      AND s.user_id = $1
+                      AND s.verdict = 'Accepted'
                 )
                 THEN 'Accepted'
-
                 ELSE (
                     SELECT s.verdict
                     FROM submissions s
                     WHERE s.problem_id = p.problem_id
-                    AND s.user_id = $1
+                      AND s.user_id = $1
                     ORDER BY s.submission_id DESC
                     LIMIT 1
                 )
             END AS verdict
 
         FROM problems p
-
         ORDER BY p.problem_id;
         `,
         [userId]
@@ -59,8 +56,8 @@ async function getProblems(userId) {
     return result.rows;
 }
 
-async function getProblemById(problemId) {
 
+async function getProblemById(problemId) {
     const result = await pool.query(
         `
         SELECT *
@@ -73,71 +70,81 @@ async function getProblemById(problemId) {
     return result.rows[0];
 }
 
-async function addProblem(
-    title,
-    statement,
-    difficulty,
-    timeLimit,
-    memoryLimit
-) {
 
+async function getProblemTags(problemId) {
     const result = await pool.query(
         `
-        INSERT INTO problems (
-            title,
-            statement,
-            difficulty,
-            time_limit,
-            memory_limit
-        )
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING *
+        SELECT t.tag_name
+        FROM problem_tags pt
+        JOIN tags t ON pt.tag_id = t.tag_id
+        WHERE pt.problem_id = $1
+        ORDER BY t.tag_name
         `,
-        [
-            title,
-            statement,
-            difficulty,
-            timeLimit,
-            memoryLimit
-        ]
+        [problemId]
+    );
+
+    return result.rows;
+}
+
+
+async function getProblemForUser(problemId, userId) {
+    const result = await pool.query(
+        `
+        SELECT
+            EXISTS (
+                SELECT 1 FROM bookmarks b
+                WHERE b.problem_id = $1 AND b.user_id = $2
+            ) AS is_bookmarked,
+
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM submissions s
+                    WHERE s.problem_id = $1 AND s.user_id = $2
+                      AND s.verdict = 'Accepted'
+                ) THEN 'Accepted'
+                ELSE (
+                    SELECT s.verdict FROM submissions s
+                    WHERE s.problem_id = $1 AND s.user_id = $2
+                    ORDER BY s.submission_id DESC
+                    LIMIT 1
+                )
+            END AS verdict
+        `,
+        [problemId, userId]
     );
 
     return result.rows[0];
 }
 
 
-async function updateProblem(
-    problemId,
-    title,
-    statement,
-    difficulty,
-    timeLimit,
-    memoryLimit
-) {
+async function addProblem(title, statement, difficulty, timeLimit, memoryLimit) {
+    const result = await pool.query(
+        `
+        INSERT INTO problems (title, statement, difficulty, time_limit, memory_limit)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *
+        `,
+        [title, statement, difficulty, timeLimit, memoryLimit]
+    );
 
+    return result.rows[0];
+}
+
+
+async function updateProblem(problemId, title, statement, difficulty, timeLimit, memoryLimit) {
     const result = await pool.query(
         `
         UPDATE problems
-
         SET
-            title = $1,
-            statement = $2,
-            difficulty = $3,
-            time_limit = $4,
+            title        = $1,
+            statement    = $2,
+            difficulty   = $3,
+            time_limit   = $4,
             memory_limit = $5
-
         WHERE problem_id = $6
-
         RETURNING *
         `,
-        [
-            title,
-            statement,
-            difficulty,
-            timeLimit,
-            memoryLimit,
-            problemId
-        ]
+        [title, statement, difficulty, timeLimit, memoryLimit, problemId]
     );
 
     return result.rows[0];
@@ -145,7 +152,6 @@ async function updateProblem(
 
 
 async function deleteProblem(problemId) {
-
     const result = await pool.query(
         `
         DELETE FROM problems
@@ -162,6 +168,8 @@ async function deleteProblem(problemId) {
 module.exports = {
     getProblems,
     getProblemById,
+    getProblemTags,
+    getProblemForUser,
     addProblem,
     updateProblem,
     deleteProblem

@@ -1,14 +1,15 @@
-const express=require("express");
-const path = require("path");
+const express = require("express");
+const router = express.Router();
 
-const router=express.Router();
-
-const submissionController=require("../controllers/submissionsController")
-
-const authenticate=require("../middlewares/authMiddleware");
-const { route } = require("./authRoutes");
+const submissionController = require("../controllers/submissionsController");
+const authenticate = require("../middlewares/authMiddleware");
 
 
+// Get user's own submissions
 router.get("/", authenticate, submissionController.getUserSubmissions);
 
-module.exports=router;
+// Create a new submission
+router.post("/", authenticate, submissionController.createSubmission);
+
+
+module.exports = router;

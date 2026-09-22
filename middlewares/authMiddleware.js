@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 function authenticate(req, res, next) {
-    console.log("inside auth middleware");
     try {
 
         const authHeader = req.headers.authorization;
@@ -26,11 +25,9 @@ function authenticate(req, res, next) {
         );
 
         req.user = decoded;
-        console.log("auth successful");
         next();
         
     } catch (err) {
-        console.log("auth failed");
         return res.status(401).json({
             message: "Invalid or expired token, Login first"
         });

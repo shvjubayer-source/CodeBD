@@ -1,22 +1,27 @@
 const bookmarksModel = require("../models/bookmarksModel");
 
+async function getBookmarks(req, res) {
+    try {
+        const userId = req.user.userId;
+        const bookmarks = await bookmarksModel.getBookmarks(userId);
+
+        return res.status(200).json(bookmarks);
+    } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+        return res.status(500).json({ message: "Failed to fetch bookmarks" });
+    }
+}
+
 async function addBookmark(req, res) {
-    console.log("Inside addbookmark controller");
-    console.log(req.user);
     try {
         const userId = req.user.userId;
         const problemId = Number(req.params.problemId);
 
         if (!Number.isInteger(problemId) || problemId <= 0) {
-            return res.status(400).json({
-                message: "Invalid problem ID"
-            });
+            return res.status(400).json({ message: "Invalid problem ID" });
         }
 
-        const bookmark = await bookmarksModel.addBookmark(
-            userId,
-            problemId
-        );
+        const bookmark = await bookmarksModel.addBookmark(userId, problemId);
 
         if (!bookmark) {
             return res.status(200).json({
@@ -33,17 +38,11 @@ async function addBookmark(req, res) {
     } catch (error) {
         console.error("Error adding bookmark:", error);
 
-        // PostgreSQL foreign-key violation:
-        // the requested problem does not exist.
         if (error.code === "23503") {
-            return res.status(404).json({
-                message: "Problem not found"
-            });
+            return res.status(404).json({ message: "Problem not found" });
         }
 
-        return res.status(500).json({
-            message: "Failed to bookmark problem"
-        });
+        return res.status(500).json({ message: "Failed to bookmark problem" });
     }
 }
 
@@ -53,13 +52,10 @@ async function removeBookmark(req, res) {
         const problemId = Number(req.params.problemId);
 
         if (!Number.isInteger(problemId) || problemId <= 0) {
-            return res.status(400).json({
-                message: "Invalid problem ID"
-            });
+            return res.status(400).json({ message: "Invalid problem ID" });
         }
 
-        const removedBookmark =
-            await bookmarksModel.removeBookmark(userId, problemId);
+        const removedBookmark = await bookmarksModel.removeBookmark(userId, problemId);
 
         if (!removedBookmark) {
             return res.status(404).json({
@@ -74,14 +70,12 @@ async function removeBookmark(req, res) {
         });
     } catch (error) {
         console.error("Error removing bookmark:", error);
-
-        return res.status(500).json({
-            message: "Failed to remove bookmark"
-        });
+        return res.status(500).json({ message: "Failed to remove bookmark" });
     }
 }
 
 module.exports = {
+    getBookmarks,
     addBookmark,
     removeBookmark
 };

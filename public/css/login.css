@@ -104,6 +104,25 @@ button[type="submit"]:active {
     box-shadow: 0 2px 8px rgba(55, 48, 163, 0.3);
 }
 
+button[type="submit"]:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Inline Error Message */
+.form-error {
+    background-color: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    margin-bottom: 4px;
+}
+
 /* Footer Link Section */
 p {
     margin-top: 24px;

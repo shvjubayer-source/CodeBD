@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse upcoming and past programming contests on CodeBD. Compete, improve your rating, and challenge yourself.">
+    <title>Contests | CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/contest.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>CodeBD</h1>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/contest" style="text-decoration:underline;">Contest</a>
+            <a href="/problems">Problems</a>
+            <a href="/user/bookmarks" id="navBookmarks">Bookmarks</a>
+            <a href="/user/profile" id="profile_link">Profile</a>
+            <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
+            <a href="/auth/login" id="navLogin" style="display:none;">Login</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+
+        <!-- Page Intro -->
+        <section class="page-intro">
+            <div>
+                <p class="eyebrow">Competitive Programming</p>
+                <h2>Contests</h2>
+                <p class="intro-copy">
+                    Challenge yourself, compare with others, and track how your skills grow
+                    through rated programming contests.
+                </p>
+            </div>
+        </section>
+
+        <!-- Stats Bar -->
+        <section class="stats-bar" id="statsBar">
+            <div class="stat-item">
+                <strong id="totalContests">—</strong>
+                <span>Total Contests</span>
+            </div>
+            <div class="stat-item">
+                <strong id="upcomingCount">—</strong>
+                <span>Upcoming</span>
+            </div>
+            <div class="stat-item">
+                <strong id="ongoingCount">—</strong>
+                <span>Ongoing</span>
+            </div>
+            <div class="stat-item">
+                <strong id="pastCount">—</strong>
+                <span>Past</span>
+            </div>
+        </section>
+
+        <!-- Filter Tabs -->
+        <section class="filter-section">
+            <div class="tab-group" role="tablist">
+                <button class="tab active" data-filter="all" role="tab">All</button>
+                <button class="tab" data-filter="upcoming" role="tab">Upcoming</button>
+                <button class="tab" data-filter="ongoing" role="tab">Ongoing</button>
+                <button class="tab" data-filter="past" role="tab">Past</button>
+            </div>
+        </section>
+
+        <!-- Contest List -->
+        <section class="contest-section">
+            <div class="list-heading">
+                <h3>All Contests</h3>
+                <p>Showing <strong id="contestCount">0</strong> contests</p>
+            </div>
+
+            <div class="contest-grid" id="contestGrid" aria-live="polite">
+                <p class="list-message">Loading contests...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CONTEST DETAILS & PROBLEMS MODAL -->
+    <div id="contestModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <span id="modalStatusBadge" class="status-badge"></span>
+                    <h2 id="modalContestTitle">Contest Title</h2>
+                </div>
+                <button class="modal-close" id="closeContestModalBtn" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalContestDesc" class="contest-modal-desc"></p>
+                
+                <div class="contest-modal-stats">
+                    <div class="m-stat"><span>📅 Start:</span> <strong id="modalStartTime">—</strong></div>
+                    <div class="m-stat"><span>🏁 End:</span> <strong id="modalEndTime">—</strong></div>
+                    <div class="m-stat"><span>👥 Participants:</span> <strong id="modalParticipants">0</strong></div>
+                </div>
+
+                <div class="modal-section-heading">
+                    <h3>Contest Problems</h3>
+                    <span id="modalProblemCount" class="badge-subtle">0 problems</span>
+                </div>
+                
+                <div id="modalProblemList" class="contest-problem-list">
+                    <!-- Dynamic problem rows -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalActionArea"></div>
+                <button type="button" class="btn-ghost" id="closeModalFooterBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STANDINGS / LEADERBOARD MODAL -->
+    <div id="standingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <span class="status-badge status-ongoing">Leaderboard</span>
+                    <h2 id="standingsContestTitle">Contest Standings</h2>
+                </div>
+                <button class="modal-close" id="closeStandingsModalBtn" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-wrapper">
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Participant</th>
+                                <th>Solved</th>
+                                <th>Score</th>
+                                <th>Penalty</th>
+                                <th>Rating Change</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standingsTableBody">
+                            <tr><td colspan="6" class="list-message">Loading standings...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" id="closeStandingsFooterBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 CodeBD — Solve. Learn. Improve.</p>
+    </footer>
+
+    <script src="/js/contest.js"></script>
+
+</body>
+</html>

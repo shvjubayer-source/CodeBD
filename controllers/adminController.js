@@ -61,15 +61,26 @@ const getContests = async (req, res) => {
   }
 };
 
+const getContestRegistrations = async (req, res) => {
+  try {
+    const contestId = req.query.contest_id ? Number(req.query.contest_id) : null;
+    const registrations = await adminModel.getContestRegistrations(contestId);
+    return res.status(200).json({ success: true, data: registrations });
+  } catch (error) {
+    console.error('getContestRegistrations error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 const createContest = async (req, res) => {
   try {
-    const { title, description, start_time } = req.body;
+    const { title, description, start_time, end_time } = req.body;
 
     if (!title || !description || !start_time) {
       return res.status(400).json({ success: false, message: 'title, description, and start_time are required' });
     }
 
-    const contest = await adminModel.createContest(title, description, start_time);
+    const contest = await adminModel.createContest(title, description, start_time, end_time || null);
     return res.status(201).json({ success: true, data: contest });
   } catch (error) {
     console.error('createContest error:', error);
@@ -80,9 +91,9 @@ const createContest = async (req, res) => {
 const updateContest = async (req, res) => {
   try {
     const contestId = req.params.id;
-    const { title, description, start_time } = req.body;
+    const { title, description, start_time, end_time } = req.body;
 
-    const updatedContest = await adminModel.updateContest(contestId, title, description, start_time);
+    const updatedContest = await adminModel.updateContest(contestId, title, description, start_time, end_time || null);
     if (!updatedContest) {
       return res.status(404).json({ success: false, message: 'Contest not found' });
     }
@@ -156,16 +167,28 @@ const deleteTag = async (req, res) => {
   }
 };
 
+const getAnalytics = async (req, res) => {
+  try {
+    const data = await adminModel.getAnalyticsData();
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error('getAnalytics error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getUsers,
   updateUserRole,
   getAllSubmissions,
   getContests,
+  getContestRegistrations,
   createContest,
   updateContest,
   deleteContest,
   getTags,
   createTag,
   deleteTag,
+  getAnalytics,
 };

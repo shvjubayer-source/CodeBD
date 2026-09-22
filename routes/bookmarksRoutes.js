@@ -1,27 +1,18 @@
 const express = require("express");
-const router=express.Router();
+const router = express.Router();
 
 const bookmarksController = require("../controllers/bookmarksController");
 const authenticate = require("../middlewares/authMiddleware");
 
 
+// Get all bookmarks for logged-in user
+router.get("/", authenticate, bookmarksController.getBookmarks);
 
-router.post(
-    "/:problemId",
-   authenticate,
-    bookmarksController.addBookmark
-);
+// Add bookmark
+router.post("/:problemId", authenticate, bookmarksController.addBookmark);
 
-router.delete(
-    "/:problemId",
-    authenticate,
-    bookmarksController.removeBookmark
-);
+// Remove bookmark
+router.delete("/:problemId", authenticate, bookmarksController.removeBookmark);
+
 
 module.exports = router;
-
-
-
-
-
-

@@ -10,11 +10,9 @@ async function register(req, res) {
         const {username, email, password} = req.body;
 
         if(!username || !email || !password){
-
-            res.status(400).json({
-                message:"All fields are require"
+            return res.status(400).json({
+                message:"All fields are required"
             });
-
         }
 
 
@@ -49,7 +47,7 @@ async function register(req, res) {
 
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
 
         res.status(500).json({
             message: "Server error"
@@ -109,7 +107,7 @@ async function login(req, res) {
 
 
     }catch(err){
-        console.log(err);
+        console.error(err);
         res.status(500).json({
             message: "Internal Server Error"
         });

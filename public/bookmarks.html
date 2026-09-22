@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your saved problems on CodeBD — quickly access the problems you've bookmarked.">
+    <title>My Bookmarks | CodeBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bookmarks.css">
+    <script src="/js/auth-utils.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>CodeBD</h1>
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/contest">Contest</a>
+            <a href="/problems">Problems</a>
+            <a href="/user/bookmarks" style="text-decoration:underline;">Bookmarks</a>
+            <a href="/user/profile" id="profile_link">Profile</a>
+            <a href="/admin" id="adminNavLink" style="display:none;color:#a5b4fc;font-weight:700">Admin Panel</a>
+            <button id="logoutBtn">Logout</button>
+        </nav>
+    </header>
+
+    <main class="page-shell">
+
+        <!-- Page Intro -->
+        <section class="page-intro">
+            <div>
+                <p class="eyebrow">My Library</p>
+                <h2>Bookmarks</h2>
+                <p class="intro-copy">
+                    Problems you've saved for later. Pick up right where you left off.
+                </p>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-row">
+            <div class="stat-pill">
+                <strong id="bookmarkCount">0</strong>
+                <span>Saved Problems</span>
+            </div>
+            <div class="stat-pill">
+                <strong id="solvedCount">0</strong>
+                <span>Solved</span>
+            </div>
+            <div class="stat-pill">
+                <strong id="unsolvedCount">0</strong>
+                <span>Unsolved</span>
+            </div>
+        </section>
+
+        <!-- Bookmark List -->
+        <section class="bookmark-section">
+            <div class="list-heading">
+                <h3>Saved Problems</h3>
+                <p>Showing <strong id="displayCount">0</strong> bookmarks</p>
+            </div>
+
+            <div id="bookmarkList" class="bookmark-list" aria-live="polite">
+                <p class="list-message">Loading bookmarks...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 CodeBD — Solve. Learn. Improve.</p>
+    </footer>
+
+    <script src="/js/bookmarks.js"></script>
+
+</body>
+</html>

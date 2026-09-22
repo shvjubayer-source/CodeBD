@@ -1,23 +1,19 @@
 const express = require("express");
-
 const router = express.Router();
 
 const problemsController = require("../controllers/problemController");
-
 const authenticate = require("../middlewares/authMiddleware");
-
 const authorizeRole = require("../middlewares/roleMiddleware");
 
 
-// Get problems
-router.get(
-    "/",
-    authenticate,
-    problemsController.getProblems
-);
+// Get all problems (authenticated users)
+router.get("/", authenticate, problemsController.getProblems);
+
+// Get single problem by ID (authenticated users)
+router.get("/:id", authenticate, problemsController.getProblemById);
 
 
-// Create problem - admin only
+// Create problem — admin only
 router.post(
     "/",
     authenticate,
@@ -25,8 +21,7 @@ router.post(
     problemsController.createProblem
 );
 
-
-// Update problem - admin only
+// Update problem — admin only
 router.put(
     "/:id",
     authenticate,
@@ -34,8 +29,7 @@ router.put(
     problemsController.updateProblem
 );
 
-
-// Delete problem - admin only
+// Delete problem — admin only
 router.delete(
     "/:id",
     authenticate,

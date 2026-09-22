@@ -72,7 +72,7 @@ function renderSubmissions(subs) {
             <td><span style="background:rgba(99,102,241,0.1);color:#818cf8;padding:3px 8px;border-radius:6px;font-size:0.78rem;font-weight:600">${escapeHtml(s.language)}</span></td>
             <td><span class="verdict-badge ${verdictClass(s.verdict)}">${escapeHtml(s.verdict||"Pending")}</span></td>
             <td>${s.execution_time != null ? s.execution_time + " ms" : "—"}</td>
-            <td>${s.memory_used != null ? s.memory_used + " MB" : "—"}</td>
+            <td>${s.memory_used != null ? (s.memory_used / 1024).toFixed(2) + " MB" : "—"}</td>
             <td style="color:#64748b;font-size:0.82rem">${formatDate(s.submitted_at)}</td>
         </tr>
     `).join("");

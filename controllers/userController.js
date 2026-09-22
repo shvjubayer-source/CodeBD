@@ -3,7 +3,7 @@ const User=require("../models/userModel");
 
 async function getProfile(req, res){
     try{
-        const user=await User.findByUsername(req.user.username);
+        const user=await User.findById(req.user.userId);
 
          if(!user){
             return res.status(404).json({
@@ -30,11 +30,26 @@ async function getProfile(req, res){
         });
 
     }
-
-
-
 }
 
-module.exports={
-    getProfile
+async function getUserAnalytics(req, res) {
+    try {
+        const userId = req.user.userId;
+        const analytics = await User.getUserAnalytics(userId);
+        return res.status(200).json({
+            success: true,
+            data: analytics
+        });
+    } catch (err) {
+        console.error("getUserAnalytics error:", err);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
 }
+
+module.exports = {
+    getProfile,
+    getUserAnalytics
+};
