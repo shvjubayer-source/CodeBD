@@ -46,9 +46,11 @@ async function createSubmission(req, res) {
             timeLimit
         );
 
-        // 4. Update submission record with verdict and execution time
-        const updatedSubmission = await submissionsModel.updateSubmissionResult(
+        // 4. Update submission record with verdict and execution time using Transaction Control
+        const updatedSubmission = await submissionsModel.finalizeSubmissionWithStats(
             initialSubmission.submission_id,
+            userId,
+            problem_id,
             evalResult.verdict,
             evalResult.executionTime
         );

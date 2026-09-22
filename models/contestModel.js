@@ -97,10 +97,56 @@ async function getContestRanking(contestId) {
     return result.rows;
 }
 
+// ── Transaction Control Example: Atomic Contest Creation ──────────────────────
+// Creates contest and links contest problems atomically.
+async function createContestWithProblems({ title, description, start_time, end_time }, problemAssignments = []) {
+    const client = await pool.connect(); // 1. Acquire dedicated connection from pool
+    try {
+        await client.query("BEGIN"); // 2. Start Transaction Control
+
+        // Step A: Insert contest record
+        const contestRes = await client.query(
+            `INSERT INTO contest (title, description, start_time, end_time)
+             VALUES ($1, $2, $3, $4)
+             RETURNING *`,
+            [title, description, start_time, end_time]
+        );
+        const contest = contestRes.rows[0];
+
+        // Step B: Insert contest problems
+        if (Array.isArray(problemAssignments) && problemAssignments.length > 0) {
+            for (let i = 0; i < problemAssignments.length; i++) {
+                const p = problemAssignments[i];
+                await client.query(
+                    `INSERT INTO contest_problem (contest_id, problem_id, problem_order, problem_label, points)
+                     VALUES ($1, $2, $3, $4, $5)`,
+                    [
+                        contest.contest_id,
+                        p.problem_id,
+                        p.problem_order || (i + 1),
+                        p.problem_label || String.fromCharCode(65 + i), // 'A', 'B', 'C'
+                        p.points || 100
+                    ]
+                );
+            }
+        }
+
+        await client.query("COMMIT"); // 3. Commit transaction
+        return contest;
+    } catch (err) {
+        await client.query("ROLLBACK"); // 4. Rollback transaction if any step fails
+        throw err;
+    } finally {
+        client.release(); // 5. Release connection
+    }
+}
+
+
 module.exports = {
     getAllContests,
     getContestById,
     getContestProblems,
     registerParticipant,
-    getContestRanking
+    getContestRanking,
+    createContestWithProblems
 };

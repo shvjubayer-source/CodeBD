@@ -194,6 +194,65 @@ async function saveProblemSolution(problemId, content) {
 }
 
 
+// ── Transaction Control Example: Atomic Problem Creation ──────────────────────
+// Creates problem, testcases, tags, and solution within a single atomic transaction.
+async function createProblemWithDetails({ title, statement, difficulty, timeLimit, memoryLimit }, testcases = [], tagIds = [], solutionContent = null) {
+    const client = await pool.connect(); // 1. Acquire dedicated connection from pool
+    try {
+        await client.query("BEGIN"); // 2. Start Transaction Control
+
+        // Step A: Insert problem record
+        const probRes = await client.query(
+            `INSERT INTO problems (title, statement, difficulty, time_limit, memory_limit)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+            [title, statement, difficulty, timeLimit, memoryLimit]
+        );
+        const problem = probRes.rows[0];
+
+        // Step B: Insert associated testcases
+        if (Array.isArray(testcases) && testcases.length > 0) {
+            for (const tc of testcases) {
+                await client.query(
+                    `INSERT INTO testcase (problem_id, input, expected_output)
+                     VALUES ($1, $2, $3)`,
+                    [problem.problem_id, tc.input || "", tc.expected_output || ""]
+                );
+            }
+        }
+
+        // Step C: Link problem tags
+        if (Array.isArray(tagIds) && tagIds.length > 0) {
+            for (const tagId of tagIds) {
+                await client.query(
+                    `INSERT INTO problem_tags (problem_id, tag_id)
+                     VALUES ($1, $2)
+                     ON CONFLICT DO NOTHING`,
+                    [problem.problem_id, tagId]
+                );
+            }
+        }
+
+        // Step D: Insert initial editorial/solution if provided
+        if (solutionContent && solutionContent.trim()) {
+            await client.query(
+                `INSERT INTO solution (problem_id, content)
+                 VALUES ($1, $2)`,
+                [problem.problem_id, solutionContent.trim()]
+            );
+        }
+
+        await client.query("COMMIT"); // 3. Commit transaction if all succeeded
+        return problem;
+    } catch (err) {
+        await client.query("ROLLBACK"); // 4. Rollback transaction if any step failed
+        throw err;
+    } finally {
+        client.release(); // 5. Release connection back to pool
+    }
+}
+
+
 module.exports = {
     getProblems,
     getProblemById,
@@ -203,5 +262,6 @@ module.exports = {
     updateProblem,
     deleteProblem,
     getProblemSolution,
-    saveProblemSolution
+    saveProblemSolution,
+    createProblemWithDetails
 };
