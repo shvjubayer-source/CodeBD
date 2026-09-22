@@ -284,22 +284,28 @@ toggleCreateBtn.addEventListener("click", () => {
     }
 });
 
-sidebarAddProblem.addEventListener("click", (e) => {
-    e.preventDefault();
-    const form = createSection.querySelector(".problem-form");
-    form.style.display = "";
-    toggleCreateBtn.textContent = "Hide";
-    createSection.scrollIntoView({ behavior: "smooth" });
-    setSidebarActive(sidebarAddProblem);
-});
+if (sidebarAddProblem) {
+    sidebarAddProblem.addEventListener("click", (e) => {
+        e.preventDefault();
+        const form = createSection ? createSection.querySelector(".problem-form") : null;
+        if (form) form.style.display = "";
+        if (toggleCreateBtn) toggleCreateBtn.textContent = "Hide";
+        if (createSection) createSection.scrollIntoView({ behavior: "smooth" });
+        setSidebarActive(sidebarAddProblem);
+    });
+}
 
-sidebarProblems.addEventListener("click", (e) => {
-    e.preventDefault();
-    document.getElementById("problemsSection").scrollIntoView({ behavior: "smooth" });
-    setSidebarActive(sidebarProblems);
-});
+if (sidebarProblems) {
+    sidebarProblems.addEventListener("click", (e) => {
+        e.preventDefault();
+        const sec = document.getElementById("problemsSection");
+        if (sec) sec.scrollIntoView({ behavior: "smooth" });
+        setSidebarActive(sidebarProblems);
+    });
+}
 
 function setSidebarActive(el) {
+    if (!el) return;
     document.querySelectorAll(".sidebar-link").forEach(l => l.classList.remove("active"));
     el.classList.add("active");
 }
