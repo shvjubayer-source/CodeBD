@@ -11,15 +11,21 @@ async function getProfile(req, res){
             });
          }
 
-         const solve_count=await User.getSolveCount(req.user.userId);
+         const [solve_count, diffStats] = await Promise.all([
+             User.getSolveCount(req.user.userId),
+             User.getDifficultyStats(req.user.userId)
+         ]);
 
          res.json({
-            username:user.username,
+            username: user.username,
             email: user.email,
             rating: user.rating,
             tier: user.tier,
             created_at: user.created_at,
-            solve_count: solve_count
+            solve_count: solve_count,
+            difficulty_index: diffStats.difficultyIndex,
+            difficulty_descriptor: diffStats.descriptor,
+            difficulty_stats: diffStats
          });
     }
 

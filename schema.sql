@@ -445,6 +445,42 @@ $$ LANGUAGE plpgsql;
 
 
 -- =========================================
+-- 22. FUNCTION: USER DIFFICULTY INDEX
+-- DI = SUM(DifficultyWeight) / SolvedProblems
+-- Easy = 1, Medium = 2, Hard = 3
+-- =========================================
+
+CREATE OR REPLACE FUNCTION fn_get_user_difficulty_index(p_user_id INTEGER)
+RETURNS NUMERIC(3,1) AS $$
+DECLARE
+    v_total_solved INTEGER;
+    v_total_weight NUMERIC;
+BEGIN
+    SELECT 
+        COUNT(DISTINCT p.problem_id),
+        COALESCE(SUM(
+            CASE LOWER(p.difficulty)
+                WHEN 'easy' THEN 1
+                WHEN 'medium' THEN 2
+                WHEN 'hard' THEN 3
+                ELSE 0
+            END
+        ), 0)
+    INTO v_total_solved, v_total_weight
+    FROM submissions s
+    JOIN problems p ON s.problem_id = p.problem_id
+    WHERE s.user_id = p_user_id AND s.verdict = 'Accepted';
+
+    IF v_total_solved IS NULL OR v_total_solved = 0 THEN
+        RETURN 0.0;
+    ELSE
+        RETURN ROUND(v_total_weight / v_total_solved, 1);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- =========================================
 -- 22. STORED PROCEDURE: MULTI-STEP CONTEST REGISTRATION
 -- Handles multi-step workflow: verifies user & contest, captures current rating,
 -- and registers participant record within a single transactional procedure.

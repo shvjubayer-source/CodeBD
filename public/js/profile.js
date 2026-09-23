@@ -84,6 +84,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         email.textContent = data.email;
         rating.textContent = data.tier ? `${data.rating} • ${data.tier}` : data.rating;
         solveCount.textContent = data.solve_count;
+
+        // Difficulty Index (DI = SUM(DifficultyWeight) / SolvedProblems)
+        const difficultyIndexEl = document.getElementById("difficultyIndex");
+        const difficultyBadgeEl = document.getElementById("difficultyBadge");
+        const diVal = data.difficulty_index !== undefined ? Number(data.difficulty_index) : 0;
+        const totalSolvedCount = Number(data.solve_count) || 0;
+        const descriptor = data.difficulty_descriptor || (totalSolvedCount > 0 ? "Active" : "No Solves");
+
+        if (difficultyIndexEl) {
+            difficultyIndexEl.textContent = totalSolvedCount > 0 ? `${diVal.toFixed(1)} / 3` : "— / 3";
+        }
+
+        if (difficultyBadgeEl) {
+            if (totalSolvedCount > 0) {
+                difficultyBadgeEl.textContent = descriptor;
+                difficultyBadgeEl.className = "di-tag-badge";
+
+                if (diVal < 1.4) difficultyBadgeEl.classList.add("mostly-easy");
+                else if (diVal < 1.8) difficultyBadgeEl.classList.add("easy-medium");
+                else if (diVal < 2.3) difficultyBadgeEl.classList.add("mostly-medium");
+                else if (diVal < 2.8) difficultyBadgeEl.classList.add("medium-hard");
+                else difficultyBadgeEl.classList.add("mostly-hard");
+
+                difficultyBadgeEl.classList.remove("hidden");
+            } else {
+                difficultyBadgeEl.textContent = "No solves yet";
+                difficultyBadgeEl.className = "di-tag-badge";
+                difficultyBadgeEl.classList.remove("hidden");
+            }
+        }
+
         document.getElementById("headingName").textContent = data.username;
 
         const joinedDate = new Date(data.created_at);
@@ -285,6 +316,34 @@ function updateUserKpis(data) {
     const subsEl = document.getElementById("userKpiSubs");
     if (accEl) accEl.textContent = `${accRate}%`;
     if (subsEl) subsEl.textContent = `${totalSubs} Submissions`;
+
+    // Difficulty Index KPI
+    const diKpiVal = document.getElementById("userKpiDI");
+    const diKpiSub = document.getElementById("userKpiDISub");
+    if (diKpiVal) {
+        let di = 0;
+        let descriptor = "No Solves";
+        if (data.difficultyStats) {
+            di = Number(data.difficultyStats.difficultyIndex) || 0;
+            descriptor = data.difficultyStats.descriptor || descriptor;
+        } else if (totalSolved > 0) {
+            let totalWeight = 0;
+            for (const d of diffs) {
+                const diffName = (d.difficulty || "").toLowerCase();
+                const weight = diffName === "easy" ? 1 : (diffName === "medium" ? 2 : (diffName === "hard" ? 3 : 0));
+                totalWeight += weight * (Number(d.count) || 0);
+            }
+            di = Number((totalWeight / totalSolved).toFixed(1));
+            if (di < 1.4) descriptor = "Mostly Easy";
+            else if (di < 1.8) descriptor = "Easy / Medium";
+            else if (di < 2.3) descriptor = "Mostly Medium";
+            else if (di < 2.8) descriptor = "Medium / Hard";
+            else descriptor = "Mostly Hard";
+        }
+
+        diKpiVal.textContent = totalSolved > 0 ? `${di.toFixed(1)} / 3` : "— / 3";
+        if (diKpiSub) diKpiSub.textContent = totalSolved > 0 ? descriptor : "No solves yet";
+    }
 }
 
 // ── 1. User Rating Progression Chart ──

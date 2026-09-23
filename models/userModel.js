@@ -70,6 +70,53 @@ async function getSolveCount(userId){
     return Number(result.rows[0].solve_count);
 }
 
+/**
+ * Calculates Difficulty Index (DI):
+ * DI = SUM(DifficultyWeight) / SolvedProblems
+ * Weights: Easy = 1, Medium = 2, Hard = 3
+ */
+async function getDifficultyStats(userId) {
+    const result = await pool.query(
+        `SELECT 
+            COUNT(DISTINCT p.problem_id)::INT AS total_solved,
+            COALESCE(SUM(
+                CASE LOWER(p.difficulty)
+                    WHEN 'easy' THEN 1
+                    WHEN 'medium' THEN 2
+                    WHEN 'hard' THEN 3
+                    ELSE 0
+                END
+            ), 0)::NUMERIC AS total_weight
+         FROM (
+             SELECT DISTINCT s.problem_id, p.difficulty
+             FROM submissions s
+             JOIN problems p ON s.problem_id = p.problem_id
+             WHERE s.user_id = $1 AND s.verdict = 'Accepted'
+         ) p`,
+        [userId]
+    );
+
+    const totalSolved = Number(result.rows[0]?.total_solved) || 0;
+    const totalWeight = Number(result.rows[0]?.total_weight) || 0;
+    const difficultyIndex = totalSolved > 0 ? Number((totalWeight / totalSolved).toFixed(1)) : 0;
+
+    let descriptor = "No Solves";
+    if (totalSolved > 0) {
+        if (difficultyIndex < 1.4) descriptor = "Mostly Easy";
+        else if (difficultyIndex < 1.8) descriptor = "Easy / Medium";
+        else if (difficultyIndex < 2.3) descriptor = "Mostly Medium";
+        else if (difficultyIndex < 2.8) descriptor = "Medium / Hard";
+        else descriptor = "Mostly Hard";
+    }
+
+    return {
+        difficultyIndex,
+        totalSolved,
+        totalWeight,
+        descriptor
+    };
+}
+
 
 async function getSubmissions(userId) {
     const result=await pool.query(
@@ -158,6 +205,28 @@ async function getUserAnalytics(userId) {
 
     const user = userRes.rows[0] || {};
 
+    let totalSolved = 0;
+    let totalWeight = 0;
+    for (const row of solvesDiffRes.rows) {
+        const count = Number(row.count) || 0;
+        const diff = (row.difficulty || "").toLowerCase();
+        let weight = 0;
+        if (diff === "easy") weight = 1;
+        else if (diff === "medium") weight = 2;
+        else if (diff === "hard") weight = 3;
+        totalSolved += count;
+        totalWeight += weight * count;
+    }
+    const difficultyIndex = totalSolved > 0 ? Number((totalWeight / totalSolved).toFixed(1)) : 0;
+    let descriptor = "No Solves";
+    if (totalSolved > 0) {
+        if (difficultyIndex < 1.4) descriptor = "Mostly Easy";
+        else if (difficultyIndex < 1.8) descriptor = "Easy / Medium";
+        else if (difficultyIndex < 2.3) descriptor = "Mostly Medium";
+        else if (difficultyIndex < 2.8) descriptor = "Medium / Hard";
+        else descriptor = "Mostly Hard";
+    }
+
     return {
         currentRating: user.rating || 0,
         ratingTier: user.tier || "Newbie (<1000)",
@@ -165,7 +234,13 @@ async function getUserAnalytics(userId) {
         ratingHistory: ratingHistRes.rows,
         solvesByDifficulty: solvesDiffRes.rows,
         verdictDistribution: verdictDistRes.rows,
-        activityTimeline: activityRes.rows
+        activityTimeline: activityRes.rows,
+        difficultyStats: {
+            difficultyIndex,
+            totalSolved,
+            totalWeight,
+            descriptor
+        }
     };
 }
 
@@ -194,6 +269,7 @@ module.exports={
     getAllUsers,
     createUser,
     getSolveCount,
+    getDifficultyStats,
     getSubmissions,
     getUserAnalytics,
     updatePassword
