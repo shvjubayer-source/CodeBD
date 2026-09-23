@@ -10,6 +10,7 @@ async function getProblems(userId) {
             p.difficulty,
             p.time_limit,
             p.memory_limit,
+            fn_get_problem_acceptance_rate(p.problem_id) AS acceptance_rate,
 
             (
                 SELECT STRING_AGG(
@@ -60,7 +61,7 @@ async function getProblems(userId) {
 async function getProblemById(problemId) {
     const result = await pool.query(
         `
-        SELECT *
+        SELECT *, fn_get_problem_acceptance_rate(problem_id) AS acceptance_rate
         FROM problems
         WHERE problem_id = $1
         `,
@@ -118,50 +119,77 @@ async function getProblemForUser(problemId, userId) {
 
 
 async function addProblem(title, statement, difficulty, timeLimit, memoryLimit) {
-    const result = await pool.query(
-        `
-        INSERT INTO problems (title, statement, difficulty, time_limit, memory_limit)
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING *
-        `,
-        [title, statement, difficulty, timeLimit, memoryLimit]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            INSERT INTO problems (title, statement, difficulty, time_limit, memory_limit)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *
+            `,
+            [title, statement, difficulty, timeLimit, memoryLimit]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 
 async function updateProblem(problemId, title, statement, difficulty, timeLimit, memoryLimit) {
-    const result = await pool.query(
-        `
-        UPDATE problems
-        SET
-            title        = $1,
-            statement    = $2,
-            difficulty   = $3,
-            time_limit   = $4,
-            memory_limit = $5
-        WHERE problem_id = $6
-        RETURNING *
-        `,
-        [title, statement, difficulty, timeLimit, memoryLimit, problemId]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            UPDATE problems
+            SET
+                title        = $1,
+                statement    = $2,
+                difficulty   = $3,
+                time_limit   = $4,
+                memory_limit = $5
+            WHERE problem_id = $6
+            RETURNING *
+            `,
+            [title, statement, difficulty, timeLimit, memoryLimit, problemId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 
 async function deleteProblem(problemId) {
-    const result = await pool.query(
-        `
-        DELETE FROM problems
-        WHERE problem_id = $1
-        RETURNING *
-        `,
-        [problemId]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            DELETE FROM problems
+            WHERE problem_id = $1
+            RETURNING *
+            `,
+            [problemId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 
@@ -174,22 +202,34 @@ async function getProblemSolution(problemId) {
 }
 
 async function saveProblemSolution(problemId, content) {
-    const existing = await pool.query(
-        `SELECT solution_id FROM solution WHERE problem_id = $1`,
-        [problemId]
-    );
-    if (existing.rows.length > 0) {
-        const update = await pool.query(
-            `UPDATE solution SET content = $1 WHERE problem_id = $2 RETURNING *`,
-            [content, problemId]
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const existing = await client.query(
+            `SELECT solution_id FROM solution WHERE problem_id = $1`,
+            [problemId]
         );
-        return update.rows[0];
-    } else {
-        const insert = await pool.query(
-            `INSERT INTO solution (problem_id, content) VALUES ($1, $2) RETURNING *`,
-            [problemId, content]
-        );
-        return insert.rows[0];
+        let row;
+        if (existing.rows.length > 0) {
+            const update = await client.query(
+                `UPDATE solution SET content = $1 WHERE problem_id = $2 RETURNING *`,
+                [content, problemId]
+            );
+            row = update.rows[0];
+        } else {
+            const insert = await client.query(
+                `INSERT INTO solution (problem_id, content) VALUES ($1, $2) RETURNING *`,
+                [problemId, content]
+            );
+            row = insert.rows[0];
+        }
+        await client.query("COMMIT");
+        return row;
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
     }
 }
 

@@ -151,17 +151,27 @@ async function createBlogPost(userId, title, content, tagIds = []) {
 
 // ── Delete blog post ──────────────────────────────────────────────────────────
 async function deleteBlogPost(postId, userId, isAdmin = false) {
-    let query = `DELETE FROM blog_post WHERE post_id = $1`;
-    const params = [postId];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        let query = `DELETE FROM blog_post WHERE post_id = $1`;
+        const params = [postId];
 
-    if (!isAdmin) {
-        query += ` AND user_id = $2`;
-        params.push(userId);
+        if (!isAdmin) {
+            query += ` AND user_id = $2`;
+            params.push(userId);
+        }
+
+        query += ` RETURNING *`;
+        const result = await client.query(query, params);
+        await client.query("COMMIT");
+        return result.rows[0] || null;
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
     }
-
-    query += ` RETURNING *`;
-    const result = await pool.query(query, params);
-    return result.rows[0] || null;
 }
 
 
@@ -185,38 +195,59 @@ async function getCommentsByPost(postId) {
 }
 
 async function addComment(postId, userId, text) {
-    const result = await pool.query(
-        `INSERT INTO blog_comment (post_id, user_id, text)
-         VALUES ($1, $2, $3)
-         RETURNING *`,
-        [postId, userId, text]
-    );
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `INSERT INTO blog_comment (post_id, user_id, text)
+             VALUES ($1, $2, $3)
+             RETURNING *`,
+            [postId, userId, text]
+        );
 
-    const comment = result.rows[0];
-    const userRes = await pool.query(
-        `SELECT username, role FROM users WHERE user_id = $1`,
-        [userId]
-    );
-    const u = userRes.rows[0];
-    return {
-        ...comment,
-        username: u ? u.username : "Unknown",
-        role: u ? u.role : "coder"
-    };
+        const comment = result.rows[0];
+        const userRes = await client.query(
+            `SELECT username, role FROM users WHERE user_id = $1`,
+            [userId]
+        );
+        await client.query("COMMIT");
+
+        const u = userRes.rows[0];
+        return {
+            ...comment,
+            username: u ? u.username : "Unknown",
+            role: u ? u.role : "coder"
+        };
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 async function deleteComment(commentId, userId, isAdmin = false) {
-    let query = `DELETE FROM blog_comment WHERE comment_id = $1`;
-    const params = [commentId];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        let query = `DELETE FROM blog_comment WHERE comment_id = $1`;
+        const params = [commentId];
 
-    if (!isAdmin) {
-        query += ` AND user_id = $2`;
-        params.push(userId);
+        if (!isAdmin) {
+            query += ` AND user_id = $2`;
+            params.push(userId);
+        }
+
+        query += ` RETURNING *`;
+        const result = await client.query(query, params);
+        await client.query("COMMIT");
+        return result.rows[0] || null;
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
     }
-
-    query += ` RETURNING *`;
-    const result = await pool.query(query, params);
-    return result.rows[0] || null;
 }
 
 
@@ -226,75 +257,97 @@ async function toggleVote(postId, userId, type) {
         throw new Error("Invalid vote type");
     }
 
-    const existing = await pool.query(
-        `SELECT type FROM blog_like WHERE post_id = $1 AND user_id = $2`,
-        [postId, userId]
-    );
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const existing = await client.query(
+            `SELECT type FROM blog_like WHERE post_id = $1 AND user_id = $2`,
+            [postId, userId]
+        );
 
-    let currentVote = null;
+        let currentVote = null;
 
-    if (existing.rows.length > 0) {
-        if (existing.rows[0].type === type) {
-            // Already voted this -> un-vote
-            await pool.query(
-                `DELETE FROM blog_like WHERE post_id = $1 AND user_id = $2`,
-                [postId, userId]
-            );
-            currentVote = null;
+        if (existing.rows.length > 0) {
+            if (existing.rows[0].type === type) {
+                // Already voted this -> un-vote
+                await client.query(
+                    `DELETE FROM blog_like WHERE post_id = $1 AND user_id = $2`,
+                    [postId, userId]
+                );
+                currentVote = null;
+            } else {
+                // Switch vote type
+                await client.query(
+                    `UPDATE blog_like SET type = $3 WHERE post_id = $1 AND user_id = $2`,
+                    [postId, userId, type]
+                );
+                currentVote = type;
+            }
         } else {
-            // Switch vote type
-            await pool.query(
-                `UPDATE blog_like SET type = $3 WHERE post_id = $1 AND user_id = $2`,
+            // New vote
+            await client.query(
+                `INSERT INTO blog_like (post_id, user_id, type) VALUES ($1, $2, $3)`,
                 [postId, userId, type]
             );
             currentVote = type;
         }
-    } else {
-        // New vote
-        await pool.query(
-            `INSERT INTO blog_like (post_id, user_id, type) VALUES ($1, $2, $3)`,
-            [postId, userId, type]
+
+        // Get updated counts
+        const counts = await client.query(
+            `SELECT 
+                COALESCE(COUNT(CASE WHEN type = 'like' THEN 1 END), 0)::int AS likes_count,
+                COALESCE(COUNT(CASE WHEN type = 'dislike' THEN 1 END), 0)::int AS dislikes_count
+             FROM blog_like 
+             WHERE post_id = $1`,
+            [postId]
         );
-        currentVote = type;
+        await client.query("COMMIT");
+
+        return {
+            userVote: currentVote,
+            likesCount: counts.rows[0].likes_count,
+            dislikesCount: counts.rows[0].dislikes_count
+        };
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
     }
-
-    // Get updated counts
-    const counts = await pool.query(
-        `SELECT 
-            COALESCE(COUNT(CASE WHEN type = 'like' THEN 1 END), 0)::int AS likes_count,
-            COALESCE(COUNT(CASE WHEN type = 'dislike' THEN 1 END), 0)::int AS dislikes_count
-         FROM blog_like 
-         WHERE post_id = $1`,
-        [postId]
-    );
-
-    return {
-        userVote: currentVote,
-        likesCount: counts.rows[0].likes_count,
-        dislikesCount: counts.rows[0].dislikes_count
-    };
 }
 
 
 // ── Bookmarks ─────────────────────────────────────────────────────────────────
 async function toggleBookmark(postId, userId) {
-    const existing = await pool.query(
-        `SELECT 1 FROM blog_bookmarks WHERE post_id = $1 AND user_id = $2`,
-        [postId, userId]
-    );
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const existing = await client.query(
+            `SELECT 1 FROM blog_bookmarks WHERE post_id = $1 AND user_id = $2`,
+            [postId, userId]
+        );
 
-    if (existing.rows.length > 0) {
-        await pool.query(
-            `DELETE FROM blog_bookmarks WHERE post_id = $1 AND user_id = $2`,
-            [postId, userId]
-        );
-        return { isBookmarked: false };
-    } else {
-        await pool.query(
-            `INSERT INTO blog_bookmarks (post_id, user_id) VALUES ($1, $2)`,
-            [postId, userId]
-        );
-        return { isBookmarked: true };
+        let isBookmarked = false;
+        if (existing.rows.length > 0) {
+            await client.query(
+                `DELETE FROM blog_bookmarks WHERE post_id = $1 AND user_id = $2`,
+                [postId, userId]
+            );
+            isBookmarked = false;
+        } else {
+            await client.query(
+                `INSERT INTO blog_bookmarks (post_id, user_id) VALUES ($1, $2)`,
+                [postId, userId]
+            );
+            isBookmarked = true;
+        }
+        await client.query("COMMIT");
+        return { isBookmarked };
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
     }
 }
 

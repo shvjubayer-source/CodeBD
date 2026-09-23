@@ -31,16 +31,10 @@ const standingsTableBody    = document.getElementById("standingsTableBody");
 let allContests = [];
 let currentFilter = "all";
 
-// Setup nav according to auth status
+// Enforce authentication on contest page
 const token = localStorage.getItem("token");
 if (!token) {
-    const navBookmarks = document.getElementById("navBookmarks");
-    const profileLink  = document.getElementById("profile_link");
-    const navLogin     = document.getElementById("navLogin");
-    if (navBookmarks) navBookmarks.style.display = "none";
-    if (profileLink)  profileLink.style.display  = "none";
-    if (logoutBtn)    logoutBtn.style.display    = "none";
-    if (navLogin)     navLogin.style.display     = "";
+    window.location.href = "/auth/login";
 } else {
     showAdminNavLink();
 }
@@ -270,7 +264,14 @@ async function openContestModal(contestId) {
     modalActionArea.innerHTML = "";
 
     try {
-        const res = await fetch(`${CONTESTS_API}/${contestId}`);
+        const res = await fetch(`${CONTESTS_API}/${contestId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "/auth/login";
+            return;
+        }
         if (!res.ok) throw new Error("Could not fetch contest");
         const contest = await res.json();
 
@@ -368,7 +369,14 @@ async function openStandingsModal(contestId) {
     }
 
     try {
-        const res = await fetch(`${CONTESTS_API}/${contestId}/ranking`);
+        const res = await fetch(`${CONTESTS_API}/${contestId}/ranking`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "/auth/login";
+            return;
+        }
         if (!res.ok) throw new Error("Could not fetch standings");
         const rankings = await res.json();
 
@@ -462,11 +470,22 @@ function updateStats() {
 }
 
 
-/* ─── Load contests from API ─── */
 async function loadContests() {
+    if (!token) {
+        window.location.href = "/auth/login";
+        return;
+    }
+
     try {
-        const headers = token ? { "Authorization": `Bearer ${token}` } : {};
-        const res = await fetch(CONTESTS_API, { headers });
+        const res = await fetch(CONTESTS_API, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "/auth/login";
+            return;
+        }
 
         if (!res.ok) throw new Error(`API error: ${res.status}`);
 

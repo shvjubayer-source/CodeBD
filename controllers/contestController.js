@@ -3,18 +3,7 @@ const contestModel = require("../models/contestModel");
 
 async function getContests(req, res) {
     try {
-        let userId = null;
-        const authHeader = req.headers.authorization;
-        if (authHeader && authHeader.startsWith("Bearer ")) {
-            try {
-                const token = authHeader.split(" ")[1];
-                const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                userId = decoded.userId;
-            } catch (e) {
-                // Not authenticated or expired, proceed as guest
-            }
-        }
-
+        const userId = req.user ? req.user.userId : null;
         const contests = await contestModel.getAllContests(userId);
         return res.status(200).json(contests);
     } catch (error) {

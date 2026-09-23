@@ -1,18 +1,25 @@
 const pool = require("../config/db");
 
 async function createSubmission(userId, problemId, language, code) {
-    // In a real judge system, verdict would be determined by running code.
-    // Here we store the submission with a 'Pending' verdict.
-    const result = await pool.query(
-        `
-        INSERT INTO submissions (user_id, problem_id, language, code, verdict)
-        VALUES ($1, $2, $3, $4, 'Pending')
-        RETURNING *
-        `,
-        [userId, problemId, language, code]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            INSERT INTO submissions (user_id, problem_id, language, code, verdict)
+            VALUES ($1, $2, $3, $4, 'Pending')
+            RETURNING *
+            `,
+            [userId, problemId, language, code]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 async function getUserSubmissions(userId) {
@@ -60,19 +67,29 @@ async function getProblemConstraints(problemId) {
 }
 
 async function updateSubmissionResult(submissionId, verdict, executionTimeMs, memoryUsedKb = null) {
-    const result = await pool.query(
-        `
-        UPDATE submissions
-        SET
-            verdict = $1,
-            execution_time = $2,
-            memory_used = $3
-        WHERE submission_id = $4
-        RETURNING *
-        `,
-        [verdict, executionTimeMs, memoryUsedKb, submissionId]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            UPDATE submissions
+            SET
+                verdict = $1,
+                execution_time = $2,
+                memory_used = $3
+            WHERE submission_id = $4
+            RETURNING *
+            `,
+            [verdict, executionTimeMs, memoryUsedKb, submissionId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 // ── Transaction Control Example: Finalizing Submission with Atomic User Stats ──

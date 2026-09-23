@@ -46,32 +46,50 @@ async function getBookmarks(userId) {
 }
 
 async function addBookmark(userId, problemId) {
-    const result = await pool.query(
-        `
-        INSERT INTO bookmarks (user_id, problem_id)
-        VALUES ($1, $2)
-        ON CONFLICT (user_id, problem_id)
-        DO NOTHING
-        RETURNING *;
-        `,
-        [userId, problemId]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            INSERT INTO bookmarks (user_id, problem_id)
+            VALUES ($1, $2)
+            ON CONFLICT (user_id, problem_id)
+            DO NOTHING
+            RETURNING *;
+            `,
+            [userId, problemId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 async function removeBookmark(userId, problemId) {
-    const result = await pool.query(
-        `
-        DELETE FROM bookmarks
-        WHERE user_id = $1
-          AND problem_id = $2
-        RETURNING *;
-        `,
-        [userId, problemId]
-    );
-
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `
+            DELETE FROM bookmarks
+            WHERE user_id = $1
+              AND problem_id = $2
+            RETURNING *;
+            `,
+            [userId, problemId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 module.exports = {

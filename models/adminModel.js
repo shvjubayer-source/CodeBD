@@ -24,11 +24,21 @@ const getTotalCounts = async () => {
 };
 
 const updateUserRole = async (userId, role) => {
-  const result = await pool.query(
-    'UPDATE users SET role=$2 WHERE user_id=$1 RETURNING user_id, username, email, role',
-    [userId, role]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'UPDATE users SET role=$2 WHERE user_id=$1 RETURNING user_id, username, email, role',
+      [userId, role]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const getAllSubmissions = async () => {
@@ -93,27 +103,57 @@ const getContestRegistrations = async (contestId = null) => {
 };
 
 const createContest = async (title, description, start_time, end_time = null) => {
-  const result = await pool.query(
-    'INSERT INTO contest(title, description, start_time, end_time) VALUES($1, $2, $3, $4) RETURNING *',
-    [title, description, start_time, end_time]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'INSERT INTO contest(title, description, start_time, end_time) VALUES($1, $2, $3, $4) RETURNING *',
+      [title, description, start_time, end_time]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const updateContest = async (contestId, title, description, start_time, end_time = null) => {
-  const result = await pool.query(
-    'UPDATE contest SET title=$1, description=$2, start_time=$3, end_time=$4 WHERE contest_id=$5 RETURNING *',
-    [title, description, start_time, end_time, contestId]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'UPDATE contest SET title=$1, description=$2, start_time=$3, end_time=$4 WHERE contest_id=$5 RETURNING *',
+      [title, description, start_time, end_time, contestId]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const deleteContest = async (contestId) => {
-  const result = await pool.query(
-    'DELETE FROM contest WHERE contest_id=$1 RETURNING *',
-    [contestId]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'DELETE FROM contest WHERE contest_id=$1 RETURNING *',
+      [contestId]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const getAllTags = async () => {
@@ -122,19 +162,39 @@ const getAllTags = async () => {
 };
 
 const createTag = async (tagName) => {
-  const result = await pool.query(
-    'INSERT INTO tags(tag_name) VALUES($1) ON CONFLICT(tag_name) DO NOTHING RETURNING *',
-    [tagName]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'INSERT INTO tags(tag_name) VALUES($1) ON CONFLICT(tag_name) DO NOTHING RETURNING *',
+      [tagName]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const deleteTag = async (tagId) => {
-  const result = await pool.query(
-    'DELETE FROM tags WHERE tag_id=$1 RETURNING *',
-    [tagId]
-  );
-  return result.rows[0];
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      'DELETE FROM tags WHERE tag_id=$1 RETURNING *',
+      [tagId]
+    );
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 };
 
 const getAnalyticsData = async () => {

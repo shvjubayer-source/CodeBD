@@ -12,7 +12,7 @@ async function findUserByEmail(email) {
 
 async function findById(userId) {
     const result = await pool.query(
-        `SELECT * FROM users WHERE user_id = $1`,
+        `SELECT *, fn_get_user_rating_tier(user_id) AS tier FROM users WHERE user_id = $1`,
         [userId]
     );
 
@@ -38,17 +38,24 @@ async function  getAllUsers() {
 }
 
 
-async function createUser(username, email, password){
-
-    const result=await pool.query(
-        `INSERT INTO users (username, email, password)
-        VALUES ($1, $2, $3)
-        RETURNING username, email, created_at`,
-        [username, email, password]
-
-    );
-
-    return result.rows[0];
+async function createUser(username, email, password) {
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `INSERT INTO users (username, email, password)
+             VALUES ($1, $2, $3)
+             RETURNING user_id, username, email, role, rating, created_at`,
+            [username, email, password]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 async function getSolveCount(userId){
@@ -143,7 +150,7 @@ async function getUserAnalytics(userId) {
             LIMIT 30
         `, [userId]),
         pool.query(`
-            SELECT rating, created_at, username
+            SELECT rating, created_at, username, fn_get_user_rating_tier(user_id) AS tier
             FROM users
             WHERE user_id = $1
         `, [userId])
@@ -153,6 +160,7 @@ async function getUserAnalytics(userId) {
 
     return {
         currentRating: user.rating || 0,
+        ratingTier: user.tier || "Newbie (<1000)",
         createdAt: user.created_at,
         ratingHistory: ratingHistRes.rows,
         solvesByDifficulty: solvesDiffRes.rows,
@@ -162,11 +170,21 @@ async function getUserAnalytics(userId) {
 }
 
 async function updatePassword(userId, hashedPassword) {
-    const result = await pool.query(
-        `UPDATE users SET password = $1 WHERE user_id = $2 RETURNING user_id, username, email`,
-        [hashedPassword, userId]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        const result = await client.query(
+            `UPDATE users SET password = $1 WHERE user_id = $2 RETURNING user_id, username, email`,
+            [hashedPassword, userId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 module.exports={

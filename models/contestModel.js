@@ -65,16 +65,26 @@ async function getContestProblems(contestId) {
 }
 
 async function registerParticipant(userId, contestId) {
-    const result = await pool.query(
-        `
-        INSERT INTO contest_participation (user_id, contest_id)
-        VALUES ($1, $2)
-        ON CONFLICT (user_id, contest_id) DO NOTHING
-        RETURNING *
-        `,
-        [userId, contestId]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query("BEGIN");
+        // Invoke stored procedure for multi-step registration workflow
+        await client.query(
+            `CALL sp_register_contest_participant($1, $2)`,
+            [userId, contestId]
+        );
+        const result = await client.query(
+            `SELECT * FROM contest_participation WHERE user_id = $1 AND contest_id = $2`,
+            [userId, contestId]
+        );
+        await client.query("COMMIT");
+        return result.rows[0];
+    } catch (err) {
+        await client.query("ROLLBACK");
+        throw err;
+    } finally {
+        client.release();
+    }
 }
 
 async function getContestRanking(contestId) {
