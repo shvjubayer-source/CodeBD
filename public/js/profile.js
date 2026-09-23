@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         username.textContent = data.username;
         email.textContent = data.email;
-        rating.textContent = data.rating;
+        rating.textContent = data.tier ? `${data.rating} • ${data.tier}` : data.rating;
         solveCount.textContent = data.solve_count;
         document.getElementById("headingName").textContent = data.username;
 

@@ -17,6 +17,7 @@ async function getProfile(req, res){
             username:user.username,
             email: user.email,
             rating: user.rating,
+            tier: user.tier,
             created_at: user.created_at,
             solve_count: solve_count
          });

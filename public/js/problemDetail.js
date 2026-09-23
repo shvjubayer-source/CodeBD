@@ -24,6 +24,7 @@ const bookmarkIcon   = document.getElementById("bookmarkIcon");
 const bookmarkText   = document.getElementById("bookmarkText");
 const timeLimit      = document.getElementById("timeLimit");
 const memoryLimit    = document.getElementById("memoryLimit");
+const acceptanceRate = document.getElementById("acceptanceRate");
 const tagsRow        = document.getElementById("tagsRow");
 const statementBody  = document.getElementById("statementBody");
 
@@ -124,6 +125,9 @@ function renderProblem(problem) {
     // Constraints
     timeLimit.textContent   = problem.time_limit   ? `${problem.time_limit}s` : "—";
     memoryLimit.textContent = problem.memory_limit ? `${problem.memory_limit} MB` : "—";
+    if (acceptanceRate) {
+        acceptanceRate.textContent = problem.acceptance_rate != null ? `${problem.acceptance_rate}%` : "—";
+    }
 
     // Tags
     if (problem.tags) {

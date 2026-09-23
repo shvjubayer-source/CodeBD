@@ -68,6 +68,17 @@ async function registerParticipant(userId, contestId) {
     const client = await pool.connect();
     try {
         await client.query("BEGIN");
+
+        // Check if user is already registered
+        const existing = await client.query(
+            `SELECT 1 FROM contest_participation WHERE user_id = $1 AND contest_id = $2`,
+            [userId, contestId]
+        );
+        if (existing.rows.length > 0) {
+            await client.query("COMMIT");
+            return null; // Already registered
+        }
+
         // Invoke stored procedure for multi-step registration workflow
         await client.query(
             `CALL sp_register_contest_participant($1, $2)`,

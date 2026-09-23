@@ -51,6 +51,11 @@ async function registerForContest(req, res) {
             return res.status(404).json({ message: "Contest not found" });
         }
 
+        // Custom validation error from database trigger or procedure (P0001)
+        if (error.code === "P0001" || (error.message && error.message.includes("already ended"))) {
+            return res.status(400).json({ message: error.message || "Cannot register: contest has already ended" });
+        }
+
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
