@@ -177,6 +177,16 @@ const getAnalytics = async (req, res) => {
   }
 };
 
+const getAuditLogs = async (req, res) => {
+  try {
+    const data = await adminModel.getAuditLogs();
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error('getAuditLogs error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getUsers,
@@ -191,4 +201,5 @@ module.exports = {
   createTag,
   deleteTag,
   getAnalytics,
+  getAuditLogs,
 };

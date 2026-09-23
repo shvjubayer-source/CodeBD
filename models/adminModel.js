@@ -296,6 +296,26 @@ const getAnalyticsData = async () => {
   };
 };
 
+const getAuditLogs = async () => {
+  const result = await pool.query(`
+    SELECT 
+      al.audit_id,
+      al.user_id,
+      COALESCE(u.username, 'User #' || al.user_id) AS username,
+      al.old_role,
+      al.new_role,
+      al.old_rating,
+      al.new_rating,
+      al.action_type,
+      al.changed_at
+    FROM user_audit_log al
+    LEFT JOIN users u ON al.user_id = u.user_id
+    ORDER BY al.changed_at DESC
+    LIMIT 100
+  `);
+  return result.rows;
+};
+
 module.exports = {
   getAllUsers,
   getTotalCounts,
@@ -310,4 +330,5 @@ module.exports = {
   createTag,
   deleteTag,
   getAnalyticsData,
+  getAuditLogs,
 };

@@ -235,6 +235,12 @@ async function registerForContest(contestId, btn) {
             }
         });
 
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("token");
+            window.location.href = "/auth/login";
+            return;
+        }
+
         const data = await res.json();
 
         if (res.ok) {

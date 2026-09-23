@@ -93,10 +93,56 @@ function attachEvents() {
                 if (!res.ok) { showMessage(json.message||"Failed","error"); return; }
                 showMessage(`User role changed to "${role}".`);
                 await loadUsers();
+                await loadAuditLogs();
             } catch(e) { showMessage("Network error","error"); }
             finally { btn.disabled = false; }
         });
     });
+}
+
+// AUDIT LOGS (TRIGGER SHADOW LOG)
+const auditTableBody = document.getElementById("auditTableBody");
+const refreshAuditBtn = document.getElementById("refreshAuditBtn");
+
+async function loadAuditLogs() {
+    if (!auditTableBody) return;
+    auditTableBody.innerHTML = `<tr><td colspan="8" class="loading-row"><div class="spinner"></div>Loading audit trail...</td></tr>`;
+    try {
+        const res = await fetch("/api/admin/audit-logs", { headers: authHeaders() });
+        if (handleUnauth(res.status)) return;
+        const json = await res.json();
+        if (!res.ok) {
+            auditTableBody.innerHTML = `<tr><td colspan="8" class="loading-row">${json.message || "Failed to load audit logs"}</td></tr>`;
+            return;
+        }
+        const logs = json.data || [];
+        renderAuditLogs(logs);
+    } catch (e) {
+        auditTableBody.innerHTML = `<tr><td colspan="8" class="loading-row">Network error loading audit logs</td></tr>`;
+    }
+}
+
+function renderAuditLogs(logs) {
+    if (!logs.length) {
+        auditTableBody.innerHTML = `<tr><td colspan="8" class="loading-row">No audit logs recorded yet. Change a user role or rating to see the trigger in action!</td></tr>`;
+        return;
+    }
+    auditTableBody.innerHTML = logs.map(l => `
+        <tr>
+            <td style="color:#475569;font-weight:600">#${l.audit_id}</td>
+            <td style="font-weight:600;color:#e2e8f0">${escapeHtml(l.username)}</td>
+            <td><span class="role-badge ${l.old_role || 'user'}">${l.old_role || '—'}</span></td>
+            <td><span class="role-badge ${l.new_role || 'user'}">${l.new_role || '—'}</span></td>
+            <td style="color:#94a3b8">${l.old_rating != null ? l.old_rating : '—'}</td>
+            <td style="color:#818cf8;font-weight:600">${l.new_rating != null ? l.new_rating : '—'}</td>
+            <td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3);">${escapeHtml(l.action_type)}</span></td>
+            <td style="color:#94a3b8;font-size:0.8rem">${new Date(l.changed_at).toLocaleString("en-US")}</td>
+        </tr>
+    `).join("");
+}
+
+if (refreshAuditBtn) {
+    refreshAuditBtn.addEventListener("click", loadAuditLogs);
 }
 
 // SEARCH
@@ -107,3 +153,4 @@ searchInput.addEventListener("input", () => {
 
 refreshBtn.addEventListener("click", loadUsers);
 loadUsers();
+loadAuditLogs();

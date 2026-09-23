@@ -12,6 +12,7 @@ router.get('/analytics', authenticate, authorizeRole('admin'), adminController.g
 // Users
 router.get('/users', authenticate, authorizeRole('admin'), adminController.getUsers);
 router.put('/users/:id/role', authenticate, authorizeRole('admin'), adminController.updateUserRole);
+router.get('/audit-logs', authenticate, authorizeRole('admin'), adminController.getAuditLogs);
 
 // Submissions
 router.get('/submissions', authenticate, authorizeRole('admin'), adminController.getAllSubmissions);

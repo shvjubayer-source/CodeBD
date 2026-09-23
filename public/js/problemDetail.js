@@ -285,6 +285,10 @@ function updateBookmarkButton(isBookmarked) {
 
 bookmarkBtn.addEventListener("click", async () => {
     if (!currentProblem) return;
+    if (!token) {
+        window.location.href = "/auth/login";
+        return;
+    }
 
     const wasBookmarked = currentProblem.is_bookmarked;
     bookmarkBtn.disabled = true;
@@ -294,6 +298,12 @@ bookmarkBtn.addEventListener("click", async () => {
             method: wasBookmarked ? "DELETE" : "POST",
             headers: { Authorization: `Bearer ${token}` }
         });
+
+        if (res.status === 401) {
+            localStorage.removeItem(TOKEN_KEY);
+            window.location.href = "/auth/login";
+            return;
+        }
 
         if (!res.ok) throw new Error("Bookmark request failed");
 
@@ -336,6 +346,11 @@ codeTextarea.addEventListener("keydown", (e) => {
 submitForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    if (!token) {
+        window.location.href = "/auth/login";
+        return;
+    }
+
     const language = languageSelect.value.trim();
     const code     = codeTextarea.value.trim();
 
@@ -366,6 +381,12 @@ submitForm.addEventListener("submit", async (e) => {
                 code
             })
         });
+
+        if (res.status === 401) {
+            localStorage.removeItem(TOKEN_KEY);
+            window.location.href = "/auth/login";
+            return;
+        }
 
         const data = await res.json();
 

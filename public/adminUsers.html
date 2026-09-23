@@ -73,6 +73,37 @@
                 </div>
                 <div id="userCount" class="problem-count"></div>
             </section>
+
+            <section class="card" style="margin-top: 28px;">
+                <div class="card-header">
+                    <div>
+                        <h2>Audit Trail (Database Trigger Shadow Log)</h2>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">
+                            Auto-recorded via PostgreSQL Trigger <code>trg_user_audit</code> upon user role or rating changes.
+                        </p>
+                    </div>
+                    <button class="btn-outline" id="refreshAuditBtn">↻ Refresh Log</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Username</th>
+                                <th>Old Role</th>
+                                <th>New Role</th>
+                                <th>Old Rating</th>
+                                <th>New Rating</th>
+                                <th>Action</th>
+                                <th>Logged At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <tr><td colspan="8" class="loading-row"><div class="spinner"></div>Loading audit trail...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </main>
     </div>
 
